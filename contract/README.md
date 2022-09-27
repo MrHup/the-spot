@@ -1,0 +1,1 @@
+this will handle the BE side of things - CoinEx SmartChain
