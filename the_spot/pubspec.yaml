@@ -1,0 +1,36 @@
+name: the_spot
+description: The Spot - A descentralized marketing platform
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.0-165.1.beta <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  speech_to_text: ^5.6.1
+  http: ^0.13.3
+  flutter_dotenv: ^5.0.2
+  hive: ^2.2.1
+  hive_flutter: ^1.1.0
+
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env
+    - assets/translations/
+    - assets/img/
