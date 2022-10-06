@@ -31,13 +31,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                children: const [
-                  SizedBox(height: 125),
+                children: [
+                  const SizedBox(height: 125),
                   Logo(),
-                  SizedBox(height: 55),
+                  const SizedBox(height: 55),
                   SignUpButton(
                     text: "Join us",
-                    onPressed: null,
+                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                        context, '/key_generate', (route) => false),
                   ),
                   TextButtonWidget("Already have an account? Sign in"),
                 ],

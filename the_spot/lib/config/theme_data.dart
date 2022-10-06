@@ -17,6 +17,12 @@ class AppThemes {
   });
 
   static const int _textColor = 0xFF22333B;
+  static const TextStyle text_description_white = TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+  static const Color accentColor = Color(0xFFa05891);
   static const MaterialColor textSwatch =
       MaterialColor(_textColor, <int, Color>{
     50: Color(0xFFF9FAFB),

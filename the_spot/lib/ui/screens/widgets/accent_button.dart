@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 
-class SignUpButton extends StatelessWidget {
+class AccentButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
 
-  const SignUpButton({this.text = "", this.onPressed, super.key});
+  const AccentButton({this.text = "", this.onPressed, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class SignUpButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(50),
-          primary: (AppThemes.textSwatch),
+          primary: AppThemes.accentColor,
           onPrimary: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
@@ -25,7 +25,7 @@ class SignUpButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: onPressed,
+        onPressed: (() {}),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(text, style: const TextStyle(fontSize: 16)),
