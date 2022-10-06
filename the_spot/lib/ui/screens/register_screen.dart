@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:the_spot/ui/screens/widgets/registration_header.dart';
+import 'package:the_spot/ui/screens/widgets/logo.dart';
+import 'package:the_spot/ui/screens/widgets/shape_white.dart';
 import 'package:the_spot/ui/screens/widgets/sign_up_button.dart';
+import 'package:the_spot/ui/screens/widgets/text_button_widget.dart';
 
 // import 'package:hive/hive.dart';
 
@@ -12,9 +14,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -24,24 +23,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          physics: const BouncingScrollPhysics(),
-          children: [
-            const SizedBox(height: 55),
-            RegistrationHeader("Hello there!"),
-            const SizedBox(height: 25),
-            const SizedBox(
-              width: 125,
-              height: 125,
-              child: Image(image: AssetImage('assets/img/logo.png')),
-            ),
-            const SizedBox(height: 55),
-            const SignUpButton(
-              text: "Sign Up",
-              onPressed: null,
-            ),
-          ]),
+      body: Stack(
+        children: [
+          ShapeWhite(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: const [
+                  SizedBox(height: 125),
+                  Logo(),
+                  SizedBox(height: 55),
+                  SignUpButton(
+                    text: "Join us",
+                    onPressed: null,
+                  ),
+                  TextButtonWidget("Already have an account? Sign in"),
+                ],
+              ),
+              Image(image: AssetImage('assets/img/concept_5.png')),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

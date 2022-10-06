@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/config/custom_extensions.dart';
 
 class SignUpButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -27,7 +28,7 @@ class SignUpButton extends StatelessWidget {
         onPressed: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(text, style: const TextStyle(fontSize: 16)),
+          child: Text(text, style: const TextStyle(fontSize: 16)).withPaddingSides(100),
         ),
       ),
     );

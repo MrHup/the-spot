@@ -14,7 +14,7 @@ class MainRouter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Tolky',
+      title: 'The Spot',
       theme: AppThemes.lightTheme,
       routes: <String, WidgetBuilder>{
         '/onboarding': (BuildContext context) => Container(),

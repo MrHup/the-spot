@@ -12,7 +12,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  speech_to_text: ^5.6.1
   http: ^0.13.3
   flutter_dotenv: ^5.0.2
   hive: ^2.2.1

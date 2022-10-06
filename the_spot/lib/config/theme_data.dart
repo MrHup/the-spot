@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AppThemes {
-  static const int _primaryColor = 0xFFFFD231;
+  static const int _primaryColor = 0xFF1C1B1F;
   static const MaterialColor primarySwatch =
       MaterialColor(_primaryColor, <int, Color>{
-    50: Color(0xFFFADF6D),
-    100: Color(0xFFffdd55),
+    50: Color(0xFF1C1B1F),
+    100: Color(0xFF1C1B1F),
     200: Color(_primaryColor),
     300: Color(_primaryColor),
     400: Color(_primaryColor),
@@ -27,13 +27,13 @@ class AppThemes {
     500: Color(_textColor),
     600: Color(_textColor),
     700: Color(_textColor),
-    800: Color(0xFF1F2937),
+    800: Color(0xFF1C1B1F),
     900: Color(0xFF111827),
   });
 
   static const MaterialColor bubbleSwatch =
-      MaterialColor(0xFFFADF6D, <int, Color>{
-    50: Color(0xFFFADF6D),
+      MaterialColor(0xFF1C1B1F, <int, Color>{
+    50: Color(0xFF1C1B1F),
   });
 
   static final lightTheme = ThemeData(
@@ -53,7 +53,7 @@ class AppThemes {
         color: textSwatch.shade600,
       ),
       headline3: const TextStyle(
-        color: Color.fromARGB(255, 51, 51, 51),
+        color: Color.fromARGB(255, 35, 35, 39),
       ),
       headline4: TextStyle(
         color: textSwatch.shade700,
