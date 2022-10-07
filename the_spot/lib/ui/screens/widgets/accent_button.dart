@@ -25,7 +25,7 @@ class AccentButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: (() {}),
+        onPressed: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(text, style: const TextStyle(fontSize: 16)),

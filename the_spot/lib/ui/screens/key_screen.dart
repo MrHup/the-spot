@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/repository/generate_key.dart';
+import 'package:the_spot/data/repository/smart_contract_test.dart';
 import 'package:the_spot/ui/screens/widgets/accent_button.dart';
 import 'package:the_spot/ui/screens/widgets/logo.dart';
 import 'package:the_spot/ui/screens/widgets/custom_drip.dart';
@@ -83,8 +84,12 @@ class _KeyScreenState extends State<KeyScreen> {
                     // WordGrid(generateWords()),
                   ),
                   const SizedBox(height: 20),
-                  const AccentButton(
+                  AccentButton(
                     text: "Copy Secret",
+                    onPressed: () {
+                      print("clicked");
+                      get_user();
+                    },
                   ),
                   SignUpButton(
                     text: "Continue",

@@ -4,9 +4,12 @@ import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/ui/screens/key_screen.dart';
 import 'package:the_spot/ui/screens/register_screen.dart';
 
+import 'package:wakelock/wakelock.dart';
+
 void main() async {
   await dotenv.load();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  Wakelock.enable();
   runApp(MainRouter());
 }
 
