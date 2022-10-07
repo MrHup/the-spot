@@ -88,13 +88,14 @@ class _KeyScreenState extends State<KeyScreen> {
                     text: "Copy Secret",
                     onPressed: () {
                       print("clicked");
-                      get_user();
+                      create_user_for_real();
                     },
                   ),
                   SignUpButton(
                     text: "Continue",
                     onPressed: () {
                       debugPrint("");
+                      get_balance_total();
                     },
                   ),
                 ],
