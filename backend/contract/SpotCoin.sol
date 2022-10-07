@@ -7,7 +7,7 @@ contract SpotCoin {
 
     constructor() {
         owner = msg.sender;
-        User memory newUser = User("0xf1", 0, 0, 0);
+        User memory newUser = User("0xf1", "0xf2", 0, 0);
         users.push(newUser);
     }
 
@@ -18,14 +18,14 @@ contract SpotCoin {
 
     struct User {
         string private_key;
-        int public_key;
+        string public_key;
         int balance;
         uint index;
     }
     
     User[] users;
     mapping(string => uint) private pv_users_map;
-    mapping(int => uint) private pb_users_map;
+    mapping(string => uint) private pb_users_map;
 
     // user-related functions
     function checkUserExists(string memory private_key) private view returns (bool){
@@ -34,7 +34,7 @@ contract SpotCoin {
         else return false;
     }
 
-    function getUserByPublicKey(int public_key) private view returns (User memory) {
+    function getUserByPublicKey(string memory public_key) private view returns (User memory) {
         return users[pb_users_map[public_key]];
     }
 
@@ -50,7 +50,7 @@ contract SpotCoin {
         else revert ("User does not exist");
     }
 
-    function addNewUser(string memory private_key, int public_key) public {
+    function addNewUser(string memory private_key, string memory public_key) public {
         if (!checkUserExists(private_key)) {
             uint index = users.length;
 
@@ -65,7 +65,7 @@ contract SpotCoin {
     }
 
     // spot pool-related functions
-    function getBalance(int public_key) onlyOwner public view returns (int) {
+    function getBalance(string memory public_key) onlyOwner public view returns (int) {
         User memory user = getUserByPublicKey(public_key);
 
         if (checkUserExists(user.private_key))
