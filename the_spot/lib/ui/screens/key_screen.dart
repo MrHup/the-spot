@@ -58,7 +58,7 @@ class _KeyScreenState extends State<KeyScreen> {
                         ).withPadding(8),
                       ],
                     ),
-                    const SizedBox(height: 55),
+                    const SizedBox(height: 20),
                     Text(info,
                         textAlign: TextAlign.center,
                         style: AppThemes.text_description_white),
@@ -94,6 +94,8 @@ class _KeyScreenState extends State<KeyScreen> {
                     SignUpButton(
                       text: "Continue",
                       onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/dashboard', (route) => false);
                         debugPrint("");
                       },
                     ),
