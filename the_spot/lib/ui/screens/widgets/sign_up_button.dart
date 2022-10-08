@@ -5,8 +5,13 @@ import 'package:the_spot/config/custom_extensions.dart';
 class SignUpButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
+  final Icon icon;
 
-  const SignUpButton({this.text = "", this.onPressed, super.key});
+  const SignUpButton(
+      {this.text = "",
+      this.onPressed,
+      this.icon = const Icon(Icons.arrow_forward_ios),
+      super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -30,62 +30,65 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: [
-          const CustomDrip(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  // color: Colors.red,
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8,
-                          maxHeight: 50,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            const CustomDrip(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    // color: Colors.red,
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                            maxHeight: 50,
+                          ),
+                          child: const Image(
+                              image: AssetImage('assets/img/logo.png')),
+                        ).withPadding(8),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(info,
+                                textAlign: TextAlign.center,
+                                style: AppThemes.text_description_white)
+                            .withPaddingSides(8),
+                        SimpleTextfield(_masterKeyController)
+                            .withPaddingSides(8),
+                        AccentButton(
+                          text: "Login",
+                          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                              context, '/dashboard', (route) => false),
                         ),
+                        TextButtonWidget(
+                          "Are you new here?",
+                          accentText: "Register",
+                          colorFirst: Colors.white,
+                          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                              context, '/register', (route) => false),
+                        ),
+                      ],
+                    ),
+                  ],
+                )).withExpanded(1),
+                Container(
+                        // color: Colors.red,
                         child: const Image(
-                            image: AssetImage('assets/img/logo.png')),
-                      ).withPadding(8),
-                    ],
-                  ),
-
-                  Column(
-                    children: [
-                      Text(info,
-                              textAlign: TextAlign.center,
-                              style: AppThemes.text_description_white)
-                          .withPaddingSides(8),
-                      SimpleTextfield(_masterKeyController).withPaddingSides(8),
-                      AccentButton(
-                        text: "Login",
-                        onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                            context, '/dashboard', (route) => false),
-                      ),
-                    ],
-                  ),
-                  // SignUpButton(
-                  //   text: "Continue",
-                  //   onPressed: () {
-                  //     debugPrint("");
-                  //   },
-                  // ),
-                ],
-              )).withExpanded(1),
-              Container(
-                      // color: Colors.red,
-                      child: const Image(
-                          image: AssetImage('assets/img/concept_6.png')))
-                  .withExpanded(1),
-            ],
-          ),
-        ],
+                            image: AssetImage('assets/img/concept_6.png')))
+                    .withExpanded(1),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

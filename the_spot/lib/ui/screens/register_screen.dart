@@ -23,35 +23,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: [
-          ShapeWhite(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 125),
-                  Logo(),
-                  const SizedBox(height: 55),
-                  SignUpButton(
-                    text: "Join us",
-                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                        context, '/key_generate', (route) => false),
-                  ),
-                  TextButtonWidget(
-                    "Already have an account?",
-                    accentText: "Sign in",
-                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', (route) => false),
-                  ),
-                ],
-              ),
-              Image(image: AssetImage('assets/img/concept_5.png')),
-            ],
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            ShapeWhite(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: 125),
+                    Logo(),
+                    const SizedBox(height: 55),
+                    SignUpButton(
+                      text: "Join us",
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/key_generate'),
+                    ),
+                    TextButtonWidget(
+                      "Already have an account?",
+                      accentText: "Sign in",
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (route) => false),
+                    ),
+                  ],
+                ),
+                Image(image: AssetImage('assets/img/concept_5.png')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

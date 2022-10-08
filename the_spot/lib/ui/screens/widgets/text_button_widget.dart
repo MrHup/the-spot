@@ -3,10 +3,14 @@ import 'package:the_spot/config/theme_data.dart';
 
 class TextButtonWidget extends StatelessWidget {
   const TextButtonWidget(this.message,
-      {super.key, this.onPressed, this.accentText = ""});
+      {super.key,
+      this.onPressed,
+      this.accentText = "",
+      this.colorFirst = AppThemes.textSwatch});
   final String message;
   final String accentText;
   final VoidCallback? onPressed;
+  final Color colorFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +22,7 @@ class TextButtonWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(message,
-                style:
-                    const TextStyle(fontSize: 16, color: AppThemes.textSwatch)),
+            Text(message, style: TextStyle(fontSize: 16, color: colorFirst)),
             const SizedBox(width: 5),
             Text(accentText,
                 style: const TextStyle(

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
+import 'package:the_spot/ui/screens/login_screen.dart';
 
 import '../dashboard_drip.dart';
 
@@ -64,13 +68,29 @@ class HomeCapsule extends StatelessWidget {
                           text: 'Exchange',
                           icon: const Icon(Icons.add,
                               color: AppThemes.accentColor),
-                          onPressed: () {},
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: ExchangeCapsule(),
+                              withNavBar: true,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          },
                         ).withExpanded(1),
                         BorderButton(
                           text: 'Transfer',
                           icon: const Icon(Icons.file_upload_outlined,
                               color: AppThemes.accentColor),
-                          onPressed: () {},
+                          onPressed: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: TransferCapsule(),
+                              withNavBar: true,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          },
                         ).withExpanded(1),
                       ],
                     ).withPaddingSides(6))

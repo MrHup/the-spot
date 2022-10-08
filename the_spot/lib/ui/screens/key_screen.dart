@@ -34,74 +34,76 @@ class _KeyScreenState extends State<KeyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: [
-          const CustomDrip(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8,
-                          maxHeight: 50,
-                        ),
-                        child: const Image(
-                            image: AssetImage('assets/img/logo.png')),
-                      ).withPadding(8),
-                    ],
-                  ),
-                  const SizedBox(height: 55),
-                  Text(info,
-                      textAlign: TextAlign.center,
-                      style: AppThemes.text_description_white),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.8,
-                      maxHeight: MediaQuery.of(context).size.height * 0.2,
-                      minHeight: MediaQuery.of(context).size.height * 0.2,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            const CustomDrip(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                            maxHeight: 50,
+                          ),
+                          child: const Image(
+                              image: AssetImage('assets/img/logo.png')),
+                        ).withPadding(8),
+                      ],
                     ),
-                    child: FutureBuilder<List<String>>(
-                        future: _wordsFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            print("Snapshot has data");
-                            return WordGrid(
-                              snapshot.data!,
-                            );
-                          }
-                          print("Snapshot does not have data");
-                          return const CircularProgressIndicator(
-                            color: AppThemes.accentColor,
-                          ).centered();
-                        }),
-                    // WordGrid(generateWords()),
-                  ),
-                  const SizedBox(height: 20),
-                  AccentButton(
-                    text: "Copy Secret",
-                    onPressed: () {
-                      print("clicked");
-                    },
-                  ),
-                  SignUpButton(
-                    text: "Continue",
-                    onPressed: () {
-                      debugPrint("");
-                    },
-                  ),
-                ],
-              ),
-              const Image(image: AssetImage('assets/img/concept_3.png')),
-            ],
-          ),
-        ],
+                    const SizedBox(height: 55),
+                    Text(info,
+                        textAlign: TextAlign.center,
+                        style: AppThemes.text_description_white),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.8,
+                        maxHeight: MediaQuery.of(context).size.height * 0.2,
+                        minHeight: MediaQuery.of(context).size.height * 0.2,
+                      ),
+                      child: FutureBuilder<List<String>>(
+                          future: _wordsFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              print("Snapshot has data");
+                              return WordGrid(
+                                snapshot.data!,
+                              );
+                            }
+                            print("Snapshot does not have data");
+                            return const CircularProgressIndicator(
+                              color: AppThemes.accentColor,
+                            ).centered();
+                          }),
+                      // WordGrid(generateWords()),
+                    ),
+                    const SizedBox(height: 20),
+                    AccentButton(
+                      text: "Copy Secret",
+                      onPressed: () {
+                        print("clicked");
+                      },
+                    ),
+                    SignUpButton(
+                      text: "Continue",
+                      onPressed: () {
+                        debugPrint("");
+                      },
+                    ),
+                  ],
+                ),
+                const Image(image: AssetImage('assets/img/concept_3.png')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
