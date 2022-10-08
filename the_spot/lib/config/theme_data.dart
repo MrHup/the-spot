@@ -22,7 +22,22 @@ class AppThemes {
     fontSize: 16,
     fontWeight: FontWeight.w500,
   );
+
+  static const TextStyle text_balance = TextStyle(
+    color: Colors.white,
+    fontSize: 26,
+    fontWeight: FontWeight.w800,
+  );
+  static const TextStyle text_balance_currency = TextStyle(
+    color: Colors.white,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
   static const Color accentColor = Color(0xFFa05891);
+  static const Color panelColor = Color(0xFF2b2831);
+  static const Color lightPanelColor = Color(0xFF49454f);
+  static const Color darkPanelColor = Color(0xFF49454f);
+
   static const MaterialColor textSwatch =
       MaterialColor(_textColor, <int, Color>{
     50: Color(0xFFF9FAFB),
