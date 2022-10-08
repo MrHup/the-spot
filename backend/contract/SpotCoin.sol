@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
+import "./Strings.sol";
+
 contract SpotCoin {
     int spot_pool = 50000000;
     address owner;
-    string owner_address;
 
     constructor() {
         owner = msg.sender;
-        owner_address = "0xA80Ae73E9408496AB1230EEdD72440e4d35C79fD";
         uint[] memory empty_array;
-        Transaction[] memory empty_history;
-        User memory newUser = User(0, "0xf1", "0xf2", 0, empty_array, empty_array, empty_history, 0);
-        users.push(newUser);
+        string[] memory empty_str;
+        // User memory newUser = User(0, "0xf1", "0xf2", 0, empty_array, empty_array, 0, empty_str, );
+        // users.push(newUser);
     }
 
     modifier onlyOwner {
@@ -29,7 +29,7 @@ contract SpotCoin {
         int amount;
         TransactionType transaction_type;
     }
-    
+
     struct User {
         uint index;
         string private_key;
@@ -37,8 +37,9 @@ contract SpotCoin {
         int balance;
         uint[] owned_spots;
         uint[] created_spots;
-        Transaction[] transaction_history;
         uint transaction_index;
+        string[] transaction_keys;
+        Transaction[] test_trans;
     }
 
     struct Spot {
@@ -52,9 +53,17 @@ contract SpotCoin {
         string image_uri;
     }
     //----------------------------------------------------------------------------------------------------------------//
+    //
     User[] users;
+    //
     mapping(string => uint) private pv_users_map;
+    //
     mapping(string => uint) private pb_users_map;
+    // public key + _ + index for user to transaction list
+    mapping(string => Transaction) transactions;
+
+    // index of user => user obj
+    // mapping(uint => User) private users;
 
     // owner_of_the_spot => spot_index
     mapping(uint => Spot) private spots;
@@ -90,9 +99,14 @@ contract SpotCoin {
         else return false;
     }
     //----------------------------------------------------------------------------------------------------------------//
-    function get_user_by_public_key(string memory public_key) private view returns (User memory) {
+    function get_user_by_public_key(string memory public_key) public view returns (User memory) {
         if (check_user_exists_pb(public_key))
-            return users[pb_users_map[public_key]];
+            {
+                User memory user = users[pb_users_map[public_key]];
+                user.private_key = "*****";
+                return users[pb_users_map[public_key]];
+            }
+
         else revert ("User does not exist");
     }
     //----------------------------------------------------------------------------------------------------------------//
@@ -115,21 +129,39 @@ contract SpotCoin {
     }
     //----------------------------------------------------------------------------------------------------------------//
     /**
+     * Get only the current user's history
+     */
+    function get_user_history(string memory private_key) public view returns (Transaction[] memory) {
+        Transaction[] memory user_transactions;
+        User memory user = get_user_by_private_key(private_key);
+        for (uint index = 0; index < uint(user.transaction_keys.length); index++)
+        {
+            // user_transactions.push(transactions[user.transaction_keys[index]]);
+            user_transactions[index] = transactions[user.transaction_keys[index]];
+        }
+        return user_transactions;
+    }
+    //----------------------------------------------------------------------------------------------------------------//
+    /**
      * Create a new user.
      */
     function add_new_user(string memory private_key, string memory public_key) public {
         if (!check_user_unique(private_key, public_key)) {
             uint index = users.length;
-            uint[] memory empty_array;
-            Transaction[] memory transaction_history;
+            // uint[] memory empty_array;
+            // string[] memory empty_str;
+            // Transaction[] memory temp_trans;
 
-            User memory new_user = User(index, private_key, public_key, 0, empty_array, empty_array, 
-                                        transaction_history, 0);
+            // User memory new_user = User(index, private_key, public_key, 0, empty_array, empty_array, 0, empty_str, temp_trans);
+            User memory new_user;
+            new_user.index = index;
+            new_user.private_key = private_key;
+            new_user.public_key = public_key;
+
             users.push(new_user);
 
             pv_users_map[private_key] = index;
             pb_users_map[public_key] = index;
-
         } 
         else revert ("User already exists");
     }
@@ -140,19 +172,25 @@ contract SpotCoin {
     function add_money(string memory private_key, int amount) public {
         if (check_user_exists_pv(private_key))
         {
-            User memory user = get_user_by_private_key(private_key);
             // verify if there are enough coins in pool
             if (spot_pool > amount)
             {
-                user.balance += amount;
+                users[pv_users_map[private_key]].balance += amount;
                 spot_pool -= amount;
-                Transaction memory transaction = Transaction(block.timestamp, owner_address, user.public_key, amount, 
+                Transaction memory transaction = Transaction(block.timestamp, "the SPOT Topup Helper", users[pv_users_map[private_key]].public_key, amount, 
                                                              TransactionType.exchange);
-                // insert transaction at current index
-                user.transaction_history[user.transaction_index] = transaction;
+
+
+                // string memory user_index_str = string.concat(users[pv_users_map[private_key]].public_key, "_");
+                // user_index_str = string.concat(user_index_str, Strings.toString(users[pv_users_map[private_key]].transaction_index));
+                // transactions[user_index_str] = transaction;
+                // // push the key into the user's list
+                // users[pv_users_map[private_key]].transaction_keys[users[pv_users_map[private_key]].transaction_index] = user_index_str;
+                users[pv_users_map[private_key]].test_trans.push(transaction);
+
+
                 // increment current index
-                user.transaction_index++;
-                users[pv_users_map[private_key]] = user;
+                users[pv_users_map[private_key]].transaction_index++;
             }
             else revert ("Not enough TSPOT coins in pool!");
         }
@@ -175,8 +213,14 @@ contract SpotCoin {
             // save sender transaction
             Transaction memory sender_transaction = Transaction(block.timestamp, sender_pub, receiver_pub, amount, 
                                                             TransactionType.sent);
+            // format index
+            // string memory sender_index_str = (sender_pub + "_" + Strings.toString(sender.transaction_index));
+            string memory sender_index_str = string.concat(sender.public_key, "_");
+            sender_index_str = string.concat(sender_index_str, Strings.toString(sender.transaction_index));
             // insert transaction at current index
-            sender.transaction_history[sender.transaction_index] = sender_transaction;
+            transactions[sender_index_str] = sender_transaction;
+            // push the key into the user's list
+            sender.transaction_keys[sender.transaction_index] = sender_index_str;
             // increment current index
             sender.transaction_index++;
 
@@ -184,8 +228,13 @@ contract SpotCoin {
             // save receiver transaction
             Transaction memory receiver_transaction = Transaction(block.timestamp, sender_pub, receiver_pub, amount, 
                                                 TransactionType.received);
+            // format index
+            string memory receiver_index_str = string.concat(receiver.public_key, "_");
+            receiver_index_str = string.concat(receiver_index_str, Strings.toString(receiver.transaction_index));
             // insert transaction at current index
-            receiver.transaction_history[receiver.transaction_index] = receiver_transaction;
+            transactions[receiver_index_str] = receiver_transaction;
+            // push the key into the user's list
+            receiver.transaction_keys[receiver.transaction_index] = receiver_index_str;
             // increment current index
             receiver.transaction_index++;
 
@@ -207,18 +256,18 @@ contract SpotCoin {
     /**
      * Create a new spot
      */
-    function create_spot(uint index, string memory public_key, int base_price, string memory image_uri) private {
+    function create_spot(uint index, string memory private_key, int base_price, string memory image_uri) public {
         if (spots[index].index == 0)
         { // spot doesn't exist
-            User memory user = get_user_by_public_key(public_key);
+            User memory user = get_user_by_private_key(private_key);
             if (user.balance > base_price)
             { // and the user has enough funds in the account
                 
                 // create spot and populate object
                 Spot storage new_spot = spots[index];
                 new_spot.index = index;
-                new_spot.current_owner = public_key;
-                new_spot.owners_chain.push(public_key);
+                new_spot.current_owner = user.public_key;
+                new_spot.owners_chain.push(user.public_key);
                 new_spot.base_price = base_price;
                 new_spot.current_price = base_price;
                 new_spot.decay_rate = 10;
@@ -228,7 +277,7 @@ contract SpotCoin {
                 // adjust user balance
                 user.balance -= base_price;
                 // update map
-                users[pb_users_map[public_key]] = user;
+                users[pv_users_map[private_key]] = user;
             }
             else revert ("Not enough funds");            
         }
