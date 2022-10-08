@@ -12,12 +12,30 @@
 				"type": "string"
 			},
 			{
+				"internalType": "int256",
+				"name": "amount",
+				"type": "int256"
+			}
+		],
+		"name": "add_money",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "private_key",
+				"type": "string"
+			},
+			{
 				"internalType": "string",
 				"name": "public_key",
 				"type": "string"
 			}
 		],
-		"name": "addNewUser",
+		"name": "add_new_user",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -30,7 +48,7 @@
 				"type": "string"
 			}
 		],
-		"name": "getBalance",
+		"name": "get_balance",
 		"outputs": [
 			{
 				"internalType": "int256",
@@ -43,7 +61,47 @@
 	},
 	{
 		"inputs": [],
-		"name": "getSpotAmount",
+		"name": "get_last_transaction",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "sender",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "receiver",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount",
+						"type": "int256"
+					},
+					{
+						"internalType": "enum SpotCoin.TransactionType",
+						"name": "transaction_type",
+						"type": "uint8"
+					}
+				],
+				"internalType": "struct SpotCoin.Transaction",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "get_spot_amount",
 		"outputs": [
 			{
 				"internalType": "int256",
@@ -67,10 +125,61 @@
 				"type": "string"
 			}
 		],
-		"name": "getUser",
+		"name": "get_transactions_for_user",
 		"outputs": [
 			{
 				"components": [
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "sender",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "receiver",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount",
+						"type": "int256"
+					},
+					{
+						"internalType": "enum SpotCoin.TransactionType",
+						"name": "transaction_type",
+						"type": "uint8"
+					}
+				],
+				"internalType": "struct SpotCoin.Transaction[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "public_key",
+				"type": "string"
+			}
+		],
+		"name": "get_user_by_public_key",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
 					{
 						"internalType": "string",
 						"name": "private_key",
@@ -87,9 +196,19 @@
 						"type": "int256"
 					},
 					{
-						"internalType": "uint256",
-						"name": "index",
-						"type": "uint256"
+						"internalType": "uint256[]",
+						"name": "owned_spots",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "created_spots",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "transaction_ids",
+						"type": "uint256[]"
 					}
 				],
 				"internalType": "struct SpotCoin.User",
@@ -98,6 +217,42 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "get_users_length",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "sender_pv",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "receiver_pb",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "amount",
+				"type": "int256"
+			}
+		],
+		"name": "transfer_money",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

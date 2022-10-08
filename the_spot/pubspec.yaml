@@ -18,6 +18,7 @@ dependencies:
   hive_flutter: ^1.1.0
   wakelock: ^0.6.2
   persistent_bottom_nav_bar: ^5.0.2
+  image_picker: ^0.8.6
 
   # web3 utils
   web3dart: ^2.4.1
@@ -37,6 +38,7 @@ flutter:
 
   assets:
     - .env
+    - assets/
     - assets/translations/
     - assets/img/
     - assets/abi.json

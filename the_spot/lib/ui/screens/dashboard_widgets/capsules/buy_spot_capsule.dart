@@ -1,24 +1,36 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
-import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
-import 'package:the_spot/ui/screens/login_screen.dart';
-import 'package:the_spot/ui/screens/widgets/sign_up_button.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/dashboard_drip.dart';
 import 'package:the_spot/ui/screens/widgets/simple_icon_button.dart';
 import 'package:the_spot/ui/screens/widgets/simple_textfield.dart';
+import 'package:image_picker/image_picker.dart';
 
-import '../dashboard_drip.dart';
-
-class TransferCapsule extends StatelessWidget {
-  TransferCapsule({this.returnNeeded = false, super.key});
+class BuySpotCapsule extends StatefulWidget {
+  BuySpotCapsule({this.returnNeeded = false, super.key});
 
   final bool returnNeeded;
 
+  @override
+  State<BuySpotCapsule> createState() => _BuySpotCapsuleState();
+}
+
+class _BuySpotCapsuleState extends State<BuySpotCapsule> {
   final TextEditingController _controller = TextEditingController();
-  final TextEditingController _receiverController = TextEditingController();
+
+  final ImagePicker _picker = ImagePicker();
+  var _image = Image.asset('assets/img/placeholder.png');
+
+  void getImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    print("Got image");
+    setState(() {
+      _image = Image.file(File(image!.path));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +54,6 @@ class TransferCapsule extends StatelessWidget {
             ),
             ListView(
               children: [
-                const Text("Transfer TSPOT (Testnet)",
-                        style: AppThemes.text_balance_currency)
-                    .withPaddingSides(20),
                 Container(
                   decoration: BoxDecoration(
                       color: AppThemes.panelColor,
@@ -54,38 +63,32 @@ class TransferCapsule extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Image(
-                        image: AssetImage('assets/img/concept_send_1.png'),
-                      ),
-                      SimpleTextfield(_receiverController,
-                          hint: "Receiver's address"),
-                      SimpleTextfield(_controller, hint: "TSPOT Amount"),
+                      _image,
+                      SimpleTextfield(_controller, hint: "SPOT name"),
                       Column(
                         children: [
                           ConstrainedBox(
                               constraints: const BoxConstraints(maxHeight: 59),
                               child: BorderButton(
-                                text: 'Send',
-                                icon: const Icon(Icons.send,
+                                text: 'Add amount',
+                                icon: const Icon(Icons.add,
                                     color: AppThemes.accentColor),
                                 onPressed: () {
                                   print("Just a top-up");
+                                  getImage();
                                 },
                               )),
-                          returnNeeded
-                              ? ConstrainedBox(
-                                  constraints:
-                                      const BoxConstraints(maxHeight: 59),
-                                  child: SimpleIconButton(
-                                    text: 'Return to dashboard',
-                                    icon: const Icon(Icons.exit_to_app,
-                                        color: Colors.white),
-                                    onPressed: () {
-                                      print("Just go back to dashboard");
-                                      Navigator.of(context).pop();
-                                    },
-                                  )).withPaddingSides(8)
-                              : Container(),
+                          ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 59),
+                              child: SimpleIconButton(
+                                text: 'Return to dashboard',
+                                icon: const Icon(Icons.exit_to_app,
+                                    color: Colors.white),
+                                onPressed: () {
+                                  print("Just go back to dashboard");
+                                  Navigator.of(context).pop();
+                                },
+                              )).withPaddingSides(8),
                         ],
                       ),
                     ],

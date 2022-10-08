@@ -89,14 +89,15 @@ class _KeyScreenState extends State<KeyScreen> {
                       text: "Copy Secret",
                       onPressed: () {
                         print("clicked");
+                        get_balance_total();
                       },
                     ),
                     SignUpButton(
                       text: "Continue",
                       onPressed: () {
+                        create_user_for_real();
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/dashboard', (route) => false);
-                        debugPrint("");
                       },
                     ),
                   ],

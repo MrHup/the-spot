@@ -85,7 +85,7 @@ class HomeCapsule extends StatelessWidget {
                           onPressed: () {
                             PersistentNavBarNavigator.pushNewScreen(
                               context,
-                              screen: TransferCapsule(),
+                              screen: TransferCapsule(returnNeeded: true),
                               withNavBar: true,
                               pageTransitionAnimation:
                                   PageTransitionAnimation.cupertino,
