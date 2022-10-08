@@ -17,6 +17,7 @@ dependencies:
   hive: ^2.2.1
   hive_flutter: ^1.1.0
   wakelock: ^0.6.2
+  persistent_bottom_nav_bar: ^5.0.2
 
   # web3 utils
   web3dart: ^2.4.1

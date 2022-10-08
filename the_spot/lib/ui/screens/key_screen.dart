@@ -54,7 +54,7 @@ class _KeyScreenState extends State<KeyScreen> {
                         ),
                         child: const Image(
                             image: AssetImage('assets/img/logo.png')),
-                      ),
+                      ).withPadding(8),
                     ],
                   ),
                   const SizedBox(height: 55),
@@ -88,14 +88,12 @@ class _KeyScreenState extends State<KeyScreen> {
                     text: "Copy Secret",
                     onPressed: () {
                       print("clicked");
-                      create_user_for_real();
                     },
                   ),
                   SignUpButton(
                     text: "Continue",
                     onPressed: () {
                       debugPrint("");
-                      get_balance_total();
                     },
                   ),
                 ],

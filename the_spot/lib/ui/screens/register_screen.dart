@@ -40,7 +40,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: () => Navigator.pushNamedAndRemoveUntil(
                         context, '/key_generate', (route) => false),
                   ),
-                  TextButtonWidget("Already have an account? Sign in"),
+                  TextButtonWidget(
+                    "Already have an account?",
+                    accentText: "Sign in",
+                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false),
+                  ),
                 ],
               ),
               Image(image: AssetImage('assets/img/concept_5.png')),
