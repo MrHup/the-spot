@@ -315,7 +315,7 @@ contract SpotCoin {
     function calcualate_hotness_factor(int chain_length, int spot_base_price) public pure returns (int) {
         int hotness_factor = 0;
         for (int i = 1; i <= chain_length; i++) {
-            hotness_factor += spot_base_price/100 * 10 * (i - 1);
+            hotness_factor += spot_base_price * 10 * (i - 1) / 100;
         }
         return hotness_factor;
     }
@@ -341,63 +341,43 @@ contract SpotCoin {
                 if (users[pv_users_map[private_key]].balance >= global_spots[spot_id].current_price)
                 {
                                                          /* Money operations */
-                        // adjust the balance of the user
+                        int n = int(global_spots[spot_id].owners_chain.length);
+                        // adjust the balance of the user ( - current_price)
                         users[pv_users_map[private_key]].balance -= global_spots[spot_id].current_price;
-                        // adjust the balance of the owner
-                        users[pb_users_map[global_spots[spot_id].current_owner]].balance += global_spots[spot_id].current_price;
-                         // log this transaction
+
                         users[pv_users_map[private_key]].transaction_ids.push(last_id_transaction);
-                        users[pb_users_map[global_spots[spot_id].current_owner]].transaction_ids.push(last_id_transaction);
-                        log_transaction(users[pv_users_map[private_key]].public_key, global_spots[spot_id].current_owner,
+                        log_transaction(users[pv_users_map[private_key]].public_key, "Ownership chain",
                                         global_spots[spot_id].current_price, TransactionType.spot_sale);
-                        
-                        
-                        // adjust the current price of the spot
-                        global_spots[spot_id].current_price = (global_spots[spot_id].current_price/100 * 80) + 
-                            (global_spots[spot_id].current_price/100 * 20) + 
-                            calcualate_hotness_factor(int(global_spots[spot_id].owners_chain.length), global_spots[spot_id].base_price);
+                        // adjust the balance of the creator (20% of the price)
+                        users[pb_users_map[global_spots[spot_id].owners_chain[0]]].balance += 20 * global_spots[spot_id].current_price / 100;
 
-
-                        // transfer 20% of the base price to the first owner in chain
-                        users[pb_users_map[global_spots[spot_id].owners_chain[0]]].balance += global_spots[spot_id].base_price/100 * 20;
-                        // log this transaction created by the SPOT Creator
                         users[pb_users_map[global_spots[spot_id].owners_chain[0]]].transaction_ids.push(last_id_transaction);
-                        log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[0],
-                                        global_spots[spot_id].base_price/100 * 20, TransactionType.spot_sale);
-                        // adjust the spot coin pool
-                        spot_pool -= global_spots[spot_id].base_price/100 * 20;
+                        int creator_comission = 20*global_spots[spot_id].current_price / 100 + ((n - 1) * 10 * global_spots[spot_id].base_price / 100);
+                        log_transaction(users[pv_users_map[private_key]].public_key, "self",
+                                        creator_comission, TransactionType.spot_sale);
+                        // adjust tthe balance of the last owner (80% of the price)
+                        users[pb_users_map[global_spots[spot_id].current_owner]].balance += 80 * global_spots[spot_id].current_price / 100;
 
-
-                        // transfer 80% of the base price to the last owner in chain
-                        users[pb_users_map[global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1]]].balance += global_spots[spot_id].base_price/100 * 80;
-                        // log this transaction created by the SPOT Creator
-                        users[pb_users_map[global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1]]].transaction_ids.push(last_id_transaction);
-                        log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1],
-                                        global_spots[spot_id].base_price/100 * 80, TransactionType.spot_sale);
-                        // adjust the spot coin pool
-                        spot_pool -= global_spots[spot_id].base_price/100 * 80;
-
-
-                        // for each user in the owner chain, transfer them (chain_lenght - 1)*10/100 * base_price
-                        for (int i = 1; i <= int(global_spots[spot_id].owners_chain.length); i++) {
-                            uint index = uint(i - 1);
-                            // adjust the balance of the user
-                            users[pb_users_map[global_spots[spot_id].owners_chain[index]]].balance += global_spots[spot_id].base_price/100 * 10 * (int(global_spots[spot_id].owners_chain.length) - 1);
-                            // log this transaction created by the SPOT Creator
-                            users[pb_users_map[global_spots[spot_id].owners_chain[index]]].transaction_ids.push(last_id_transaction);
-                            log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[index],
-                                            global_spots[spot_id].base_price/100 * 10 * (int(global_spots[spot_id].owners_chain.length) - 1), TransactionType.spot_sale);
-                            // adjust the spot coin pool
-                            spot_pool -= global_spots[spot_id].base_price/100 * 10 * (int(global_spots[spot_id].owners_chain.length) - 1);
-                        }
+                        users[pb_users_map[global_spots[spot_id].current_owner]].transaction_ids.push(last_id_transaction);
+                        creator_comission = 80*global_spots[spot_id].current_price / 100;
+                        log_transaction(users[pv_users_map[private_key]].public_key, "self",
+                                        creator_comission, TransactionType.spot_sale);
                         
-                                                         /* Chain operations */
+                        // distribute the money to the owners of the chain
+                        for (int i = 0; i < n; i++) {
+                            int hot_commission =  global_spots[spot_id].base_price * 10 * i / 100;
+                            users[pb_users_map[global_spots[spot_id].owners_chain[uint(i)]]].balance += hot_commission;
+                            if (i>0) {
+                                users[pb_users_map[global_spots[spot_id].owners_chain[uint(i)]]].transaction_ids.push(last_id_transaction);
+                                log_transaction(users[pv_users_map[private_key]].public_key, users[pb_users_map[global_spots[spot_id].owners_chain[uint(i)]]].public_key,
+                                        hot_commission, TransactionType.spot_sale);
+                            }
+                        }
 
-                        // add the user to the owners chain
+                        // add fraier to chain
                         global_spots[spot_id].owners_chain.push(users[pv_users_map[private_key]].public_key);
                         //set last_reset_time to now
                         global_spots[spot_id].last_reset_time = block.timestamp;
-                        
                         // add the spot to the user
                         users[pv_users_map[private_key]].owned_spots.push(spot_id);
                         // remove the spot from the old owner
@@ -414,7 +394,10 @@ contract SpotCoin {
                             }
                         }
                         // adjust the owner of the spot
-                        global_spots[spot_id].current_owner = private_key;          
+                        global_spots[spot_id].current_owner = private_key;  
+                        // adjust the current price of the spot
+                        global_spots[spot_id].current_price = global_spots[spot_id].current_price +
+                            calcualate_hotness_factor(n, global_spots[spot_id].base_price);       
                 }
                 else revert ("Not enough money in account");                
             }
