@@ -33,6 +33,11 @@ class AppThemes {
     fontSize: 12,
     fontWeight: FontWeight.w400,
   );
+  static const TextStyle text_small_key = TextStyle(
+    color: panelColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
   static const Color accentColor = Color(0xFFa05891);
   static const Color panelColor = Color(0xFF2b2831);
   static const Color lightPanelColor = Color(0xFF49454f);

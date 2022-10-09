@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_spot/config/custom_extensions.dart';
+import 'package:the_spot/config/theme_data.dart';
 
 class WordGrid extends StatelessWidget {
   WordGrid(this.words, {super.key});
@@ -21,7 +22,7 @@ class WordGrid extends StatelessWidget {
             child: Center(
               child: Text(
                 '${words[index]}',
-                style: Theme.of(context).textTheme.headline6,
+                style: AppThemes.text_small_key,
               ),
             ),
           ).withPaddingSides(2).withPaddingTop(5);

@@ -19,6 +19,13 @@ dependencies:
   wakelock: ^0.6.2
   persistent_bottom_nav_bar: ^5.0.2
   image_picker: ^0.8.6
+  fluttertoast: ^8.0.9
+  bloc: ^8.0.3
+  flutter_bloc: ^8.0.1
+  hydrated_bloc: ^8.1.0
+
+  # android only
+  flutter_displaymode: ^0.4.0
 
   # web3 utils
   web3dart: ^2.4.1

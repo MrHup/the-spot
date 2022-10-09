@@ -5,8 +5,13 @@ import 'package:the_spot/config/custom_extensions.dart';
 class AccentButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
+  final Icon icon;
 
-  const AccentButton({this.text = "", this.onPressed, super.key});
+  const AccentButton(
+      {this.text = "",
+      this.onPressed,
+      this.icon = const Icon(Icons.abc),
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,13 @@ class AccentButton extends StatelessWidget {
         onPressed: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(text, style: const TextStyle(fontSize: 16)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon,
+              Text(text, style: const TextStyle(fontSize: 16)),
+            ],
+          ),
         ),
       ),
     );
