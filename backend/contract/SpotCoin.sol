@@ -386,7 +386,7 @@ contract SpotCoin {
                             // log this transaction created by the SPOT Creator
                             users[pb_users_map[global_spots[spot_id].owners_chain[index]]].transaction_ids.push(last_id_transaction);
                             log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[index],
-                                            global_spots[spot_id].base_price/100 * 10 * int((global_spots[spot_id].owners_chain.length)) - 1, TransactionType.spot_sale);
+                                            global_spots[spot_id].base_price/100 * 10 * (int(global_spots[spot_id].owners_chain.length) - 1), TransactionType.spot_sale);
                             // adjust the spot coin pool
                             spot_pool -= global_spots[spot_id].base_price/100 * 10 * (int(global_spots[spot_id].owners_chain.length) - 1);
                         }
