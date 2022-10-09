@@ -355,7 +355,6 @@ contract SpotCoin {
                         // adjust the balance of the owner
                         users[pb_users_map[global_spots[spot_id].current_owner]].balance += global_spots[spot_id].current_price;
                         // adjust the current price of the spot
-                        // global_spots[spot_id].current_price += global_spots[spot_id].current_price * global_spots[spot_id].price_increase / 100;
                         global_spots[spot_id].current_price = (global_spots[spot_id].current_price/100 * 80) + 
                             (global_spots[spot_id].current_price/100 * 20) + 
                             calcualate_hotness_factor(global_spots[spot_id].owners_chain.length, global_spots[spot_id].base_price);
@@ -366,15 +365,36 @@ contract SpotCoin {
                         log_transaction(users[pv_users_map[private_key]].public_key, global_spots[spot_id].current_owner,
                                         global_spots[spot_id].current_price, TransactionType.spot_sale);
 
+
                         // transfer 20% of the base price to the first owner in chain
                         users[pb_users_map[global_spots[spot_id].owners_chain[0]]].balance += global_spots[spot_id].base_price/100 * 20;
+                        // log this transaction created by the SPOT Creator
+                        users[pb_users_map[global_spots[spot_id].owners_chain[0]]].transaction_ids.push(last_id_transaction);
+                        log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[0],
+                                        global_spots[spot_id].base_price/100 * 20, TransactionType.spot_sale);
+                        // adjust the spot coin pool
                         spot_pool -= global_spots[spot_id].base_price/100 * 20;
+
+
                         // transfer 80% of the base price to the last owner in chain
                         users[pb_users_map[global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1]]].balance += global_spots[spot_id].base_price/100 * 80;
+                        // log this transaction created by the SPOT Creator
+                        users[pb_users_map[global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1]]].transaction_ids.push(last_id_transaction);
+                        log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[global_spots[spot_id].owners_chain.length - 1],
+                                        global_spots[spot_id].base_price/100 * 80, TransactionType.spot_sale);
+                        // adjust the spot coin pool
                         spot_pool -= global_spots[spot_id].base_price/100 * 80;
+
+
                         // for each user in the owner chain, transfer them (chain_lenght - 1)*10/100 * base_price
                         for (uint i = 0; i < global_spots[spot_id].owners_chain.length; i++) {
+                            // adjust the balance of the user
                             users[pb_users_map[global_spots[spot_id].owners_chain[i]]].balance += global_spots[spot_id].base_price/100 * 10 * (global_spots[spot_id].owners_chain.length - 1);
+                            // log this transaction created by the SPOT Creator
+                            users[pb_users_map[global_spots[spot_id].owners_chain[i]]].transaction_ids.push(last_id_transaction);
+                            log_transaction("The SPOT Creator", global_spots[spot_id].owners_chain[i],
+                                            global_spots[spot_id].base_price/100 * 10 * (global_spots[spot_id].owners_chain.length - 1), TransactionType.spot_sale);
+                            // adjust the spot coin pool
                             spot_pool -= global_spots[spot_id].base_price/100 * 10 * (global_spots[spot_id].owners_chain.length - 1);
                         }
                         // adjust the owner of the spot
@@ -407,40 +427,5 @@ contract SpotCoin {
         }
         else revert ("Spot does not exist");
     }
-    // //----------------------------------------------------------------------------------------------------------------//
-    // function buy_spot(uint index, string memory private_key) public {
-    //     User memory user = get_user_by_private_key(private_key);
-    //     Spot storage spot = global_spots[index];
-    //     if (user.balance > spot.current_price)
-    //     {
-    //         // adjust the balance of both users
-    //         user.balance -= spot.current_price;
-    //         User memory old_owner = get_user_by_public_key(spot.current_owner);
-    //         old_owner.balance += spot.current_price;
-
-    //         // add the transaction to both users
-    //         Transaction memory transaction = Transaction(block.timestamp, user.public_key, old_owner.public_key, spot.current_price, TransactionType.spot_purchase);
-    //         global_transactions[user.transaction_ids.length] = transaction;
-    //         user.transaction_ids[user.transaction_ids.length] = user.transaction_ids.length;
-
-    //         transaction = Transaction(block.timestamp, user.public_key, old_owner.public_key, spot.current_price, TransactionType.spot_sale);
-    //         global_transactions[old_owner.transaction_ids.length] = transaction;
-    //         old_owner.transaction_ids[old_owner.transaction_ids.length] = old_owner.transaction_ids.length;
-
-    //         // store the modified objects
-    //         users[pv_users_map[private_key]] = user;
-    //         users[pb_users_map[spot.current_owner]] = old_owner;
-
-    //         // adjust the spot
-    //         spot.current_owner = user.public_key;
-    //         spot.owners_chain.push(user.public_key);
-    //         spot.current_price = spot.base_price;
-    //         spot.last_reset_time = block.timestamp;
-
-    //         // store the modified spot
-    //         global_spots[index] = spot;
-    //     }
-    //     else revert ("Not enough money in account");
-    // }
     //================================================================================================================//
 }
