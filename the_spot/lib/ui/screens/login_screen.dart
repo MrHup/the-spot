@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/config/custom_extensions.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/widgets/accent_button.dart';
 import 'package:the_spot/ui/screens/widgets/custom_drip.dart';
 import 'package:the_spot/ui/screens/widgets/logo.dart';
@@ -62,13 +63,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textAlign: TextAlign.center,
                                 style: AppThemes.text_description_white)
                             .withPaddingSides(8),
-                        SimpleTextfield(_masterKeyController)
-                            .withPaddingSides(8),
+                        SimpleTextfield(
+                          _masterKeyController,
+                          hint:
+                              "magic words you saved go here magically mysterious",
+                        ).withPaddingSides(8),
                         AccentButton(
-                          text: "Login",
-                          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                              context, '/dashboard', (route) => false),
-                        ),
+                            text: "Login",
+                            icon: Icon(Icons.login),
+                            onPressed: () => attemptLogin(
+                                context, _masterKeyController.text)),
                         TextButtonWidget(
                           "Are you new here?",
                           accentText: "Register",

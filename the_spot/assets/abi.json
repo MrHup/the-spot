@@ -44,6 +44,263 @@
 		"inputs": [
 			{
 				"internalType": "string",
+				"name": "private_key",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "spot_id",
+				"type": "uint256"
+			}
+		],
+		"name": "buy_spot",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "spot_id",
+				"type": "uint256"
+			}
+		],
+		"name": "check_spot_exists",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "spot_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "spot_image",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "owner_pv",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "spot_price",
+				"type": "int256"
+			}
+		],
+		"name": "create_new_spot",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "get_all_spots",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "image_uri",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "current_owner",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "owners_chain",
+						"type": "string[]"
+					},
+					{
+						"internalType": "int256",
+						"name": "base_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "current_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "decay_rate",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "last_reset_time",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct SpotCoin.Spot[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "private_key",
+				"type": "string"
+			}
+		],
+		"name": "get_all_spots_created_by_user",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "image_uri",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "current_owner",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "owners_chain",
+						"type": "string[]"
+					},
+					{
+						"internalType": "int256",
+						"name": "base_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "current_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "decay_rate",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "last_reset_time",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct SpotCoin.Spot[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "private_key",
+				"type": "string"
+			}
+		],
+		"name": "get_all_spots_owned_by_user",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "image_uri",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "current_owner",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "owners_chain",
+						"type": "string[]"
+					},
+					{
+						"internalType": "int256",
+						"name": "base_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "current_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "decay_rate",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "last_reset_time",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct SpotCoin.Spot[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
 				"name": "public_key",
 				"type": "string"
 			}
@@ -92,6 +349,72 @@
 					}
 				],
 				"internalType": "struct SpotCoin.Transaction",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "get_spot",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "image_uri",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "current_owner",
+						"type": "string"
+					},
+					{
+						"internalType": "string[]",
+						"name": "owners_chain",
+						"type": "string[]"
+					},
+					{
+						"internalType": "int256",
+						"name": "base_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "current_price",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "decay_rate",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "last_reset_time",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct SpotCoin.Spot",
 				"name": "",
 				"type": "tuple"
 			}
@@ -166,6 +489,62 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "get_user_by_index",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "private_key",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "public_key",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "balance",
+						"type": "int256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "owned_spots",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "created_spots",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "transaction_ids",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct SpotCoin.User",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "public_key",
 				"type": "string"
@@ -227,6 +606,50 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "private_key",
+				"type": "string"
+			}
+		],
+		"name": "login_user_by_pv",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "int256",
+				"name": "",
+				"type": "int256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
 			}
 		],
 		"stateMutability": "view",

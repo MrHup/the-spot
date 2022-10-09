@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
@@ -11,10 +12,13 @@ import 'package:the_spot/ui/screens/login_screen.dart';
 import '../dashboard_drip.dart';
 
 class HomeCapsule extends StatelessWidget {
-  const HomeCapsule({super.key});
+  HomeCapsule({super.key});
+
+  int _currentBalance = 1;
 
   @override
   Widget build(BuildContext context) {
+    _currentBalance = GlobalVals.currentUser.balance.toInt();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(children: [
@@ -45,8 +49,8 @@ class HomeCapsule extends StatelessWidget {
                     child: const Image(
                         image: AssetImage('assets/img/plain_logo.png'))),
                 const SizedBox(width: 5),
-                const Text(
-                  '2208.05',
+                Text(
+                  _currentBalance.toString(),
                   style: AppThemes.text_balance,
                 ),
                 const Text(
