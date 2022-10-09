@@ -46,7 +46,7 @@ contract SpotCoin {
         string image_uri;
         string current_owner;
         string[] owners_chain;
-        int base_price;s
+        int base_price;
         int current_price;
         int decay_rate;
         uint last_reset_time;
