@@ -126,7 +126,11 @@ class _MySpotsCapsuleState extends State<MySpotsCapsule> {
                             print("Snapshot has data");
                             return ListView(
                               children: [
-                                for (var spot in snapshot.data!) SpotTile(spot)
+                                for (var spot in snapshot.data!)
+                                  SpotTile(
+                                    spot,
+                                    owned: true,
+                                  )
                               ],
                             );
                           }

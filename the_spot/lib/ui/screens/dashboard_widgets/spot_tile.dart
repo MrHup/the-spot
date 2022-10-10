@@ -8,8 +8,9 @@ import 'package:the_spot/ui/screens/dashboard_widgets/capsules/scan_capsule.dart
 import 'package:the_spot/ui/screens/dashboard_widgets/icon_button.dart';
 
 class SpotTile extends StatelessWidget {
-  SpotTile(this.spot, {super.key});
+  SpotTile(this.spot, {this.owned = false, super.key});
   Spot spot;
+  final bool owned;
 
   @override
   Widget build(BuildContext context) {
@@ -30,27 +31,29 @@ class SpotTile extends StatelessWidget {
           ),
           Row(
             children: [
+              owned
+                  ? IconButtonW(
+                      onPressed: () {
+                        print("Edit");
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        color: AppThemes.accentColor,
+                      ))
+                  : Container(),
               IconButtonW(
                   onPressed: () {
-                    print("View Scan");
-                  },
-                  icon: const Icon(
-                    Icons.grid_view,
-                    color: AppThemes.accentColor,
-                  )),
-              IconButtonW(
-                  onPressed: () {
-                    print("Share");
+                    print("View");
                     PersistentNavBarNavigator.pushNewScreen(
                       context,
-                      screen: FocusCapsule(),
+                      screen: FocusCapsule(spot),
                       withNavBar: true,
                       pageTransitionAnimation:
                           PageTransitionAnimation.cupertino,
                     );
                   },
                   icon: const Icon(
-                    Icons.share,
+                    Icons.remove_red_eye,
                     color: AppThemes.accentColor,
                   )),
             ],

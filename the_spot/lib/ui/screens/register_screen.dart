@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/widgets/logo.dart';
 import 'package:the_spot/ui/screens/widgets/shape_white.dart';
 import 'package:the_spot/ui/screens/widgets/sign_up_button.dart';
@@ -17,6 +19,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
+    checkMasterKey();
+  }
+
+  void checkMasterKey() async {
+    var persistentStorage = await Hive.openBox('userData');
+    String? maybeString = persistentStorage.get('privateKey');
+    final privateKey = maybeString ?? "";
+    print("Privatekey is $privateKey");
+
+    if (privateKey != "") {
+      attemptLogin(context, privateKey);
+    }
   }
 
   @override

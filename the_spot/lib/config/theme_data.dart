@@ -38,6 +38,16 @@ class AppThemes {
     fontSize: 12,
     fontWeight: FontWeight.w400,
   );
+  static const TextStyle text_spot_accent = TextStyle(
+    color: AppThemes.accentColor,
+    fontSize: 26,
+    fontWeight: FontWeight.w800,
+  );
+  static const TextStyle text_spot_white = TextStyle(
+    color: Colors.white,
+    fontSize: 26,
+    fontWeight: FontWeight.w800,
+  );
   static const TextStyle text_small_key = TextStyle(
     color: panelColor,
     fontSize: 12,

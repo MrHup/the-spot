@@ -121,7 +121,7 @@ void attemptLogin(BuildContext context, String rawPrivateKey) async {
         "<<<flavius_debug>>> global pv is now: ${GlobalVals.currentUser.privateKey}");
     // save hash to persistent storage
     var persistentStorage = await Hive.openBox('userData');
-    persistentStorage.put("privateKey", privateKey);
+    persistentStorage.put("privateKey", GlobalVals.currentUser.privateKey);
     Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
   }
 }

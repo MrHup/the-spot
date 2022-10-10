@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
@@ -30,31 +31,30 @@ class AccountCapsule extends StatelessWidget {
               ],
             ),
             Container().withExpanded(1),
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text("Account operations",
-                          style: AppThemes.text_balance_currency)
-                      .withPaddingSides(20),
-                  AccentButton(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text("Account operations",
+                        style: AppThemes.text_balance_currency)
+                    .withPaddingSides(20),
+                AccentButton(
                     text: "Log out",
-                    icon: Icon(Icons.logout),
-                    onPressed: () => PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: LoginScreen(),
-                      withNavBar: false, // OPTIONAL VALUE. True by default.
-                      pageTransitionAnimation:
-                          PageTransitionAnimation.cupertino,
-                    ),
-                  ).withPadding(16),
-                ],
-              ),
+                    icon: const Icon(Icons.logout),
+                    onPressed: () async {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: LoginScreen(),
+                        withNavBar: false, // OPTIONAL VALUE. True by default.
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
+                      var persistentStorage = await Hive.openBox('userData');
+                      persistentStorage.delete("privateKey");
+                    }).withPadding(16),
+              ],
             ).withExpanded(5),
-            Container(
-              child: const Image(
-                image: AssetImage('assets/img/concept_7.png'),
-              ),
+            const Image(
+              image: AssetImage('assets/img/concept_7.png'),
             ).withExpanded(4),
           ],
         )
