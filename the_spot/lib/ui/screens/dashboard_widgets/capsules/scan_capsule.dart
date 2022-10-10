@@ -31,16 +31,19 @@ class ScanCapsule extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Scan Spots",
+                  const Text("Tap a spot to buy it",
                           style: AppThemes.text_balance_currency)
-                      .withPaddingSides(20),
+                      .withPaddingSides(20)
+                      .centered(),
                   Container(
                     decoration: BoxDecoration(
                         color: AppThemes.panelColor,
                         border: Border.all(color: AppThemes.panelColor),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(25))),
-                    child: Container(),
+                    child: const Image(
+                            image: AssetImage('assets/img/spot_scan.png'))
+                        .withPadding(20),
                   ).withPadding(16).withExpanded(1)
                 ],
               ),

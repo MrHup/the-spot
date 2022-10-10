@@ -313,9 +313,35 @@ void attemptCreateNewSpot(
     final String imageUri,
     final String privateKey,
     final BigInt basePrice) async {
-  blockUser(context);
-
   final bool status =
       await createNewSpot(name, imageUri, privateKey, basePrice);
-  Navigator.of(context).popUntil(ModalRoute.withName("/"));
+}
+
+void transferMoney(String sender, String receiver, BigInt amount) async {
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final transferFunction = contract.function('transfer_money');
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: transferFunction,
+          parameters: [sender, receiver, amount],
+        ),
+        chainId: 53);
+    await client.dispose();
+
+    showSimpleToast("Transfered succesfully");
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on transfering");
+    print(e);
+    showSimpleToast("Error while transfering");
+  }
 }

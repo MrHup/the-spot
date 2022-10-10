@@ -7,6 +7,7 @@ import 'package:the_spot/data/models/transactionw3.dart';
 import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/transaction_tile.dart';
 
 import '../dashboard_drip.dart';
@@ -101,15 +102,15 @@ class _HomeCapsuleState extends State<HomeCapsule> {
                           icon: const Icon(Icons.file_upload_outlined,
                               color: AppThemes.accentColor),
                           onPressed: () {
-                            // PersistentNavBarNavigator.pushNewScreen(
-                            //   context,
-                            //   screen: TransferCapsule(returnNeeded: true),
-                            //   withNavBar: true,
-                            //   pageTransitionAnimation:
-                            //       PageTransitionAnimation.cupertino,
-                            // );
-                            getTransactionsForUser(
-                                GlobalVals.currentUser.privateKey);
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: TransferCapsule(returnNeeded: true),
+                              withNavBar: true,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                            // getTransactionsForUser(
+                            //     GlobalVals.currentUser.privateKey);
                           },
                         ).withExpanded(1),
                       ],

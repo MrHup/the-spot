@@ -3,6 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/static_user.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
+import 'package:the_spot/data/repository/popups.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
 import 'package:the_spot/ui/screens/login_screen.dart';
@@ -19,6 +22,12 @@ class TransferCapsule extends StatelessWidget {
 
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _receiverController = TextEditingController();
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,19 @@ class TransferCapsule extends StatelessWidget {
                                 icon: const Icon(Icons.send,
                                     color: AppThemes.accentColor),
                                 onPressed: () {
-                                  print("Just a top-up");
+                                  print("Just a transfer");
+                                  if (_receiverController.text.isNotEmpty &&
+                                      _controller.text.isNotEmpty &&
+                                      isNumeric(_controller.text)) {
+                                  } else {
+                                    showSimpleToast(
+                                        "Please fill all the fields");
+                                    transferMoney(
+                                        GlobalVals.currentUser.privateKey,
+                                        _receiverController.text,
+                                        BigInt.from(int.parse(
+                                            _receiverController.text)));
+                                  }
                                 },
                               )),
                           returnNeeded
