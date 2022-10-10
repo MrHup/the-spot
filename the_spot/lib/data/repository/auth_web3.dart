@@ -160,8 +160,10 @@ Future<bool> addMoneyToUser(String privateKey, int amount) async {
 
 void attemptAddMoney(
     BuildContext context, String privateKey, int amount) async {
-  // blockUser(context);
+  blockUser(context);
   final bool status = await addMoneyToUser(privateKey, amount);
+  Navigator.of(context, rootNavigator: true).pop();
+  Navigator.pop(context);
   updateUserBalance(privateKey);
 }
 
@@ -314,8 +316,11 @@ void attemptCreateNewSpot(
     final String imageUri,
     final String privateKey,
     final BigInt basePrice) async {
+  blockUser(context);
   final bool status =
       await createNewSpot(name, imageUri, privateKey, basePrice);
+  Navigator.of(context, rootNavigator: true).pop();
+  Navigator.pop(context);
 }
 
 void transferMoney(String sender, String receiver, BigInt amount) async {
