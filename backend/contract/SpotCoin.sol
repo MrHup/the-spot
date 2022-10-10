@@ -13,11 +13,6 @@ contract SpotCoin {
         users.push(user);
         
     }
-    
-    // modifier onlyOwner {
-    //     require(msg.sender == owner);
-    //     _;
-    // }
     //----------------------------------------------------------------------------------------------------------------//
     // 1. SpotCoin
     enum TransactionType { exchange, received, sent, spot_creation, spot_sale, transfer }
@@ -50,6 +45,14 @@ contract SpotCoin {
         int current_price;
         int decay_rate;
         uint last_reset_time;
+    }
+
+    struct SimpleSpot {
+        uint index;
+        string name;
+        string image_uri;
+        string current_owner;
+        int current_price;
     }
     //----------------------------------------------------------------------------------------------------------------//
     // Mapping
@@ -157,20 +160,20 @@ contract SpotCoin {
         else revert ("User does not exist");
     }
     //----------------------------------------------------------------------------------------------------------------//
-    // debug functions
-    // #TODO: covert to private
-    function get_users_length() public view returns (uint) {
-        return users.length;
-    }
-    function get_user_by_index(uint index) public view returns (User memory) {
-        return users[index];
-    }  
-    function get_last_transaction() public view returns (Transaction memory) {
-        if (last_id_transaction == 0)
-            revert("No transactions yet");
+    // // debug functions
+    // // #TODO: covert to private
+    // function get_users_length() public view returns (uint) {
+    //     return users.length;
+    // }
+    // function get_user_by_index(uint index) public view returns (User memory) {
+    //     return users[index];
+    // }  
+    // function get_last_transaction() public view returns (Transaction memory) {
+    //     if (last_id_transaction == 0)
+    //         revert("No transactions yet");
 
-        return global_transactions[last_id_transaction-1];
-    }
+    //     return global_transactions[last_id_transaction-1];
+    // }
     //----------------------------------------------------------------------------------------------------------------//
     /**
      * Create a new user.
@@ -266,40 +269,46 @@ contract SpotCoin {
     }
     //----------------------------------------------------------------------------------------------------------------//
     /**
-     * Get a spot by index
+     * Convert a Spot to a SimpleSpot
      */
-    function get_spot(uint index) public view returns (Spot memory) {
-        return global_spots[index];
+    function convert_spot_to_simple_spot(Spot memory spot) private pure returns (SimpleSpot memory) {
+        return SimpleSpot(spot.index, spot.name, spot.image_uri, spot.current_owner, spot.current_price);
     }
+    /**
+     * Get a spot by index
+     */    
+    function get_spot_by_index(uint index) public view returns (SimpleSpot memory) {
+        return convert_spot_to_simple_spot(global_spots[index]);
+    }    
     /**
      * Get all spots
      */
-    function get_all_spots() public view returns (Spot[] memory) {
-        Spot[] memory spots = new Spot[](last_id_spot);
+    function get_all_spots() public view returns (SimpleSpot[] memory) {
+        SimpleSpot[] memory spots = new SimpleSpot[](last_id_spot);
         for (uint i = 0; i < last_id_spot; i++) {
-            spots[i] = global_spots[i];
+            spots[i] = convert_spot_to_simple_spot(global_spots[i]);
         }
         return spots;
     }
     /**
      * Get all the spots owned by a user
      */
-    function get_all_spots_owned_by_user(string memory private_key) public view returns (Spot[] memory) {
+    function get_all_spots_owned_by_user(string memory private_key) public view returns (SimpleSpot[] memory) {
         User memory user = get_user_by_private_key(private_key);
-        Spot[] memory spots = new Spot[](user.owned_spots.length);
+        SimpleSpot[] memory spots = new SimpleSpot[](user.owned_spots.length);
         for (uint i = 0; i < user.owned_spots.length; i++) {
-            spots[i] = global_spots[user.owned_spots[i]];
+            spots[i] = convert_spot_to_simple_spot(global_spots[user.owned_spots[i]]);
         }
         return spots;
     }
     /**
      * Get all the spots created by a user
      */
-    function get_all_spots_created_by_user(string memory private_key) public view returns (Spot[] memory) {
+    function get_all_spots_created_by_user(string memory private_key) public view returns (SimpleSpot[] memory) {
         User memory user = get_user_by_private_key(private_key);
-        Spot[] memory spots = new Spot[](user.created_spots.length);
+        SimpleSpot[] memory spots = new SimpleSpot[](user.created_spots.length);
         for (uint i = 0; i < user.created_spots.length; i++) {
-            spots[i] = global_spots[user.created_spots[i]];
+            spots[i] = convert_spot_to_simple_spot(global_spots[user.created_spots[i]]);
         }
         return spots;
     }
@@ -312,79 +321,74 @@ contract SpotCoin {
             return true;
         else return false;
     }
-    function calcualate_hotness_factor(int chain_length, int spot_base_price) public pure returns (int) {
+    function calcualate_hotness_factor(int chain_length, int spot_base_price) private pure returns (int) {
         int hotness_factor = 0;
         for (int i = 1; i <= chain_length; i++) {
             hotness_factor += spot_base_price * 10 * (i - 1) / 100;
         }
         return hotness_factor;
     }
-    function test_code(uint spot_id, uint index) public view returns (int) {
-        int amount = 0;
-        amount = users[pb_users_map[global_spots[spot_id].owners_chain[index]]].balance + global_spots[spot_id].base_price/100 * 10 * int(global_spots[spot_id].owners_chain.length) - 1;
-        return amount;
-    }
     // #TODO: covert to private
-    function get_spot_chain_lenght(uint spot_id) public view returns (int) {
-        return int(global_spots[spot_id].owners_chain.length);
-    }
-    function DEBUG_create_users() public {
-        // create 3 users
-        add_new_user("pv1", "pb1");
-        add_new_user("pv2", "pb2");
-        add_new_user("pv3", "pb3");
-        add_new_user("pv4", "pb4");
+    // function get_spot_chain_lenght(uint spot_id) private view returns (int) {
+    //     return int(global_spots[spot_id].owners_chain.length);
+    // }
+    // function DEBUG_create_users() public {
+    //     // create 3 users
+    //     add_new_user("pv1", "pb1");
+    //     add_new_user("pv2", "pb2");
+    //     add_new_user("pv3", "pb3");
+    //     add_new_user("pv4", "pb4");
 
-        // add money to the debug users
-        add_money("pv1", 1000);
-        add_money("pv2", 1000);
-        add_money("pv3", 1000);
-        add_money("pv4", 1000);
+    //     // add money to the debug users
+    //     add_money("pv1", 1000);
+    //     add_money("pv2", 1000);
+    //     add_money("pv3", 1000);
+    //     add_money("pv4", 1000);
 
-        // create 1 spot
-        create_new_spot("spot1", "img1", "pv1", 100);
-    }
+    //     // create 1 spot
+    //     create_new_spot("spot1", "img1", "pv1", 100);
+    // }
 
-    function DEBUG_get_current_price() public view returns (int) {
-        Spot memory spot = get_spot(0);
-        return int(spot.current_price);
-    }
+    // function DEBUG_get_current_price() public view returns (int) {
+    //     Spot memory spot = get_spot(0);
+    //     return int(spot.current_price);
+    // }
 
-    function DEBUG_get_spot_owner() public view returns (string memory) {
-        Spot memory spot = get_spot(0);
-        return spot.current_owner;
-    }
+    // function DEBUG_get_spot_owner() public view returns (string memory) {
+    //     Spot memory spot = get_spot(0);
+    //     return spot.current_owner;
+    // }
 
-    function DEBUG_get_spot_owners_chain() public view returns (string[] memory) {
-        Spot memory spot = get_spot(0);
-        return spot.owners_chain;
-    }
+    // function DEBUG_get_spot_owners_chain() public view returns (string[] memory) {
+    //     Spot memory spot = get_spot(0);
+    //     return spot.owners_chain;
+    // }
 
-    function DEBUG_get_pv1_balance() public view returns (int) {
-        User memory user = get_user_by_private_key("pv1");
-        return user.balance;
-    }
-    // get pv2 balance
-    function DEBUG_get_pv2_balance() public view returns (int) {
-        User memory user = get_user_by_private_key("pv2");
-        return user.balance;
-    }
-    // get pv3 balance
-    function DEBUG_get_pv3_balance() public view returns (int) {
-        User memory user = get_user_by_private_key("pv3");
-        return user.balance;
-    }
-    // get pv4 balance
-    function DEBUG_get_pv4_balance() public view returns (int) {
-        User memory user = get_user_by_private_key("pv4");
-        return user.balance;
-    }
+    // function DEBUG_get_pv1_balance() public view returns (int) {
+    //     User memory user = get_user_by_private_key("pv1");
+    //     return user.balance;
+    // }
+    // // get pv2 balance
+    // function DEBUG_get_pv2_balance() public view returns (int) {
+    //     User memory user = get_user_by_private_key("pv2");
+    //     return user.balance;
+    // }
+    // // get pv3 balance
+    // function DEBUG_get_pv3_balance() public view returns (int) {
+    //     User memory user = get_user_by_private_key("pv3");
+    //     return user.balance;
+    // }
+    // // get pv4 balance
+    // function DEBUG_get_pv4_balance() public view returns (int) {
+    //     User memory user = get_user_by_private_key("pv4");
+    //     return user.balance;
+    // }
 
-    function DEBUG_buy_spot() public {
-        buy_spot("pv2", 0);
-        buy_spot("pv3", 0);
-        buy_spot("pv4", 0);
-    }
+    // function DEBUG_buy_spot() public {
+    //     buy_spot("pv2", 0);
+    //     buy_spot("pv3", 0);
+    //     buy_spot("pv4", 0);
+    // }
     /**
      * Buy a spot
      */
@@ -425,8 +429,9 @@ contract SpotCoin {
 
                     // distribute the commisions to the owners chain
                     uint chain_length = global_spots[spot_id].owners_chain.length;
-                    for (uint i = 0; i < chain_length; i++) {
-                        int commission = global_spots[spot_id].base_price * 10 * (int(chain_length) - 1) / 100;
+                    for (uint i = 0; i < chain_length; i++) 
+                    {
+                        int commission = global_spots[spot_id].base_price * 10 * (int(chain_length) - (int(i) + 1)) / 100;
                         users[pb_users_map[global_spots[spot_id].owners_chain[i]]].balance += commission;
 
                         // add the transaction id to the current owner in the chain
