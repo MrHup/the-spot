@@ -24,9 +24,12 @@ class _MySpotsCapsuleState extends State<MySpotsCapsule> {
   void initState() {
     super.initState();
     _spotsFuture = getAllSpotsCreatedByUser(GlobalVals.currentUser.privateKey);
+    _spotsOwnedFuture =
+        getAllSpotsOwnedByUser(GlobalVals.currentUser.privateKey);
   }
 
   Future<List<Spot>>? _spotsFuture;
+  Future<List<Spot>>? _spotsOwnedFuture;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +75,8 @@ class _MySpotsCapsuleState extends State<MySpotsCapsule> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(width: 10),
-                  const Text("My Spots", style: AppThemes.text_balance_currency)
+                  const Text("Created Spots",
+                          style: AppThemes.text_balance_currency)
                       .withPaddingSides(20),
                   Container(
                     decoration: BoxDecoration(
@@ -99,7 +103,42 @@ class _MySpotsCapsuleState extends State<MySpotsCapsule> {
                   ).withPadding(16).withExpanded(1)
                 ],
               ),
-            ).withExpanded(8),
+            ).withExpanded(4),
+            Container(
+              // color: Colors.blue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 10),
+                  const Text("Owned Spots",
+                          style: AppThemes.text_balance_currency)
+                      .withPaddingSides(20),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppThemes.panelColor,
+                        border: Border.all(color: AppThemes.panelColor),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(25))),
+                    child: FutureBuilder<List<Spot>>(
+                        future: _spotsOwnedFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            print("Snapshot has data");
+                            return ListView(
+                              children: [
+                                for (var spot in snapshot.data!) SpotTile(spot)
+                              ],
+                            );
+                          }
+                          print("Snapshot does not have data");
+                          return const CircularProgressIndicator(
+                            color: AppThemes.accentColor,
+                          ).centered();
+                        }),
+                  ).withPadding(16).withExpanded(1)
+                ],
+              ),
+            ).withExpanded(4),
             Container().withExpanded(1),
           ],
         )

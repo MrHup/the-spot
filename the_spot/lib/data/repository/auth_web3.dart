@@ -400,3 +400,52 @@ Future<List<Spot>> getAllSpotsCreatedByUser(String privateKey) async {
     return [];
   }
 }
+
+Future<List<Spot>> getAllSpotsOwnedByUser(String privateKey) async {
+  try {
+    print("<<<flavius_Debug>>> Getting spots for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    print("<<<flavius_Debug>>> Client created");
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    print("<<<flavius_Debug>>> abi loaded");
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+    print("<<<flavius_Debug>>> contract created");
+
+    final getSpotsForUser = contract.function('get_all_spots_owned_by_user');
+    print("<<<flavius_Debug>>> function created");
+
+    final dev = await client.call(
+        contract: contract, function: getSpotsForUser, params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev is $dev");
+    List<Spot> spots = [];
+    for (var spot in dev[0]) {
+      print(spot);
+      final int id = spot[0].toInt();
+      print("received id: $id");
+      final String name = spot[1];
+      print("received name: $name");
+      final String imageUri = spot[2];
+      print("received imageUri: $imageUri");
+      final String owner = spot[3];
+      print("received owner: $owner");
+      final int currentPrice = spot[4].toInt();
+      print("received currentPrice: $currentPrice");
+
+      spots.add(Spot(
+        index: id,
+        name: name,
+        image_uri: imageUri,
+        current_owner: owner,
+        current_price: currentPrice,
+      ));
+    }
+
+    return spots;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    return [];
+  }
+}
