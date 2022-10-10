@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/spot.dart';
 import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/data/models/transactionw3.dart';
 import 'package:the_spot/data/repository/generate_key.dart';
@@ -343,5 +344,54 @@ void transferMoney(String sender, String receiver, BigInt amount) async {
     print("<<<flavius_debug>>> Error on transfering");
     print(e);
     showSimpleToast("Error while transfering");
+  }
+}
+
+Future<List<Spot>> getAllSpotsCreatedByUser(String privateKey) async {
+  try {
+    print("<<<flavius_Debug>>> Getting spots for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    print("<<<flavius_Debug>>> Client created");
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    print("<<<flavius_Debug>>> abi loaded");
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+    print("<<<flavius_Debug>>> contract created");
+
+    final getSpotsForUser = contract.function('get_all_spots_created_by_user');
+    print("<<<flavius_Debug>>> function created");
+
+    final dev = await client.call(
+        contract: contract, function: getSpotsForUser, params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev is $dev");
+    List<Spot> spots = [];
+    for (var spot in dev[0]) {
+      print(spot);
+      final int id = spot[0].toInt();
+      print("received id: $id");
+      final String name = spot[1];
+      print("received name: $name");
+      final String imageUri = spot[2];
+      print("received imageUri: $imageUri");
+      final String owner = spot[3];
+      print("received owner: $owner");
+      final int currentPrice = spot[4].toInt();
+      print("received currentPrice: $currentPrice");
+
+      spots.add(Spot(
+        index: id,
+        name: name,
+        image_uri: imageUri,
+        current_owner: owner,
+        current_price: currentPrice,
+      ));
+    }
+
+    return spots;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    return [];
   }
 }

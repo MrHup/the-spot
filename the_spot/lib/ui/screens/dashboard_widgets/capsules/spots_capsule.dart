@@ -3,15 +3,30 @@ import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/spot.dart';
+import 'package:the_spot/data/models/static_user.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/buy_spot_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/spot_tile.dart';
 
 import '../dashboard_drip.dart';
 
-class MySpotsCapsule extends StatelessWidget {
+class MySpotsCapsule extends StatefulWidget {
   const MySpotsCapsule({super.key});
 
+  @override
+  State<MySpotsCapsule> createState() => _MySpotsCapsuleState();
+}
+
+class _MySpotsCapsuleState extends State<MySpotsCapsule> {
+  @override
+  void initState() {
+    super.initState();
+    _spotsFuture = getAllSpotsCreatedByUser(GlobalVals.currentUser.privateKey);
+  }
+
+  Future<List<Spot>>? _spotsFuture;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +55,13 @@ class MySpotsCapsule extends StatelessWidget {
                     maxWidth: MediaQuery.of(context).size.width * 0.8,
                     maxHeight: 50,
                   ),
-                  child: const Image(image: AssetImage('assets/img/logo.png')),
+                  child: GestureDetector(
+                      onTap: () {
+                        getAllSpotsCreatedByUser(
+                            GlobalVals.currentUser.privateKey);
+                      },
+                      child: const Image(
+                          image: AssetImage('assets/img/logo.png'))),
                 ).withPadding(8),
               ],
             ),
@@ -50,6 +71,7 @@ class MySpotsCapsule extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(width: 10),
                   const Text("My Spots", style: AppThemes.text_balance_currency)
                       .withPaddingSides(20),
                   Container(
@@ -58,19 +80,22 @@ class MySpotsCapsule extends StatelessWidget {
                         border: Border.all(color: AppThemes.panelColor),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(25))),
-                    child: ListView(
-                      children: [
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile(),
-                        SpotTile()
-                      ],
-                    ),
+                    child: FutureBuilder<List<Spot>>(
+                        future: _spotsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            print("Snapshot has data");
+                            return ListView(
+                              children: [
+                                for (var spot in snapshot.data!) SpotTile(spot)
+                              ],
+                            );
+                          }
+                          print("Snapshot does not have data");
+                          return const CircularProgressIndicator(
+                            color: AppThemes.accentColor,
+                          ).centered();
+                        }),
                   ).withPadding(16).withExpanded(1)
                 ],
               ),

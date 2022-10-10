@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/config/custom_extensions.dart';
+import 'package:the_spot/data/models/spot.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/focus_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/scan_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/icon_button.dart';
 
 class SpotTile extends StatelessWidget {
-  const SpotTile({super.key});
+  SpotTile(this.spot, {super.key});
+  Spot spot;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +23,9 @@ class SpotTile extends StatelessWidget {
         children: [
           const Icon(Icons.star, color: Colors.white),
           Column(
-            children: const [
-              Text("MySpot #1", style: AppThemes.text_description_white),
-              Text("Created by me", style: AppThemes.text_balance_currency),
+            children: [
+              Text(spot.name, style: AppThemes.text_description_white),
+              Text(spot.current_owner, style: AppThemes.text_balance_currency),
             ],
           ),
           Row(

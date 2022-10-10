@@ -1,26 +1,26 @@
 // transaction class
 class Spot {
-  final String sender;
-  final String receiver;
-  final int amount;
-  final String date;
-  final String type;
+  final int index;
+  final String name;
+  final String image_uri;
+  final String current_owner;
+  final int current_price;
 
   Spot({
-    required this.sender,
-    required this.receiver,
-    required this.amount,
-    required this.date,
-    required this.type,
+    required this.index,
+    required this.name,
+    required this.image_uri,
+    required this.current_owner,
+    required this.current_price,
   });
 
   factory Spot.fromJson(Map<String, dynamic> json) {
     return Spot(
-      sender: json['sender'],
-      receiver: json['receiver'],
-      amount: json['amount'],
-      date: json['date'],
-      type: json['type'],
+      index: json['index'],
+      name: json['name'],
+      image_uri: json['image_uri'],
+      current_owner: json['current_owner'],
+      current_price: json['current_price'],
     );
   }
 
@@ -31,5 +31,15 @@ class Spot {
       print('CastError when trying to cast $x to $T!');
       return fallback;
     }
+  }
+
+  static Spot getEmptySpot() {
+    return Spot(
+      index: 0,
+      name: "",
+      image_uri: "",
+      current_owner: "",
+      current_price: 0,
+    );
   }
 }

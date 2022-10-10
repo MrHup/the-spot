@@ -39,6 +39,7 @@ class AccountCapsule extends StatelessWidget {
                       .withPaddingSides(20),
                   AccentButton(
                     text: "Log out",
+                    icon: Icon(Icons.logout),
                     onPressed: () => PersistentNavBarNavigator.pushNewScreen(
                       context,
                       screen: LoginScreen(),
