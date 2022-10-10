@@ -2,7 +2,7 @@
 class TransactionW3 {
   final String sender;
   final String receiver;
-  final BigInt amount;
+  final int amount;
   final String date;
   final String type;
 

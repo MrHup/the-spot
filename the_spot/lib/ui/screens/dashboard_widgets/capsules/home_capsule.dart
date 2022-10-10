@@ -7,6 +7,7 @@ import 'package:the_spot/data/models/transactionw3.dart';
 import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/transaction_tile.dart';
 
 import '../dashboard_drip.dart';
 
@@ -133,8 +134,11 @@ class _HomeCapsuleState extends State<HomeCapsule> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             print("Snapshot has data");
-                            return Container(
-                              child: Text("Hooray"),
+                            return ListView(
+                              children: [
+                                for (var transaction in snapshot.data!)
+                                  TransactionTile(transaction)
+                              ],
                             );
                           }
                           print("Snapshot does not have data");

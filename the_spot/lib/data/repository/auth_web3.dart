@@ -14,7 +14,7 @@ import 'package:http/http.dart';
 
 const String rpcUrl = 'https://testnet-rpc.coinex.net';
 final EthereumAddress contractAddr =
-    EthereumAddress.fromHex('0x13Cc952095aa16E03031DC7b07a5416bD085B38B');
+    EthereumAddress.fromHex('0xBec82cA758075766fE73b395A2627c6E1edaEdcE');
 const String _privateKey =
     "0x0503d85eaf557849e40c4a7e6895aa2f6764c26af04fd02a36f5d0f3fa3954fc";
 
@@ -63,8 +63,6 @@ void attemptRegister(
     print(
         "<<<flavius_debug>>> User registered in with privatekey: $privateKey");
     GlobalVals.currentUser = user;
-    print(
-        "<<<flavius_debug>>> global pv is now: ${GlobalVals.currentUser.privateKey}");
     // save hash to persistent storage
     var persistentStorage = await Hive.openBox('userData');
     persistentStorage.put("privateKey", privateKey);
@@ -186,39 +184,64 @@ void updateUserBalance(String privateKey) async {
 }
 
 Future<List<TransactionW3>> getTransactionsForUser(String privateKey) async {
-  print("<<<flavius_Debug>>> Getting transactions for user: $privateKey");
-  final client = Web3Client(rpcUrl, Client());
-  print("<<<flavius_Debug>>> Client created");
-  final abiCode = await rootBundle.loadString('assets/abi.json');
-  print("<<<flavius_Debug>>> abi loaded");
-  final contract =
-      DeployedContract(ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
-  print("<<<flavius_Debug>>> contract created");
+  try {
+    print("<<<flavius_Debug>>> Getting transactions for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    print("<<<flavius_Debug>>> Client created");
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    print("<<<flavius_Debug>>> abi loaded");
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+    print("<<<flavius_Debug>>> contract created");
 
-  final getTransactionsForUser = contract.function('get_transactions_for_user');
-  print("<<<flavius_Debug>>> function created");
+    final getTransactionsForUser =
+        contract.function('get_transactions_for_user');
+    print("<<<flavius_Debug>>> function created");
 
-  final dev = await client.call(
-      contract: contract,
-      function: getTransactionsForUser,
-      params: [privateKey]);
+    final dev = await client.call(
+        contract: contract,
+        function: getTransactionsForUser,
+        params: [privateKey]);
 
-  print("<<<flavius_debug>>> dev is $dev");
-  List<TransactionW3> transactions = [];
-  for (var transaction in dev[0]) {
-    print(transaction);
-    var dt = DateTime.fromMillisecondsSinceEpoch(transaction[0].toInt());
-    var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
+    print("<<<flavius_debug>>> dev is $dev");
+    List<TransactionW3> transactions = [];
+    for (var transaction in dev[0]) {
+      print(transaction);
+      var dt = DateTime.fromMillisecondsSinceEpoch(transaction[0].toInt());
+      print("this is reached 1");
+      var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt); // 31/12/2000, 22:00
+      print("this is reached 2");
+      // final int typeIndex = transaction[4];
 
-    transactions.add(TransactionW3(
-      date: d24,
-      sender: transaction[1],
-      receiver: transaction[2],
-      amount: transaction[3],
-      type: transaction[4],
-    ));
+      // print("This is reached :) $typeIndex");
+
+      final String sender = transaction[1];
+      print("received sender: $sender");
+      final String receiver = transaction[2];
+      print("received receiver: $receiver");
+      final int amount = transaction[3].toInt();
+      print("received amount: $amount");
+      final String date = d24;
+      print("received date: $date");
+      final int typeNr = transaction[4].toInt();
+      print("received typeNr: $typeNr");
+      final String type = GlobalVals.operationTypesEnum[typeNr] ?? "Unknown";
+      print("received type: $type");
+
+      transactions.add(TransactionW3(
+        date: date,
+        sender: sender,
+        receiver: receiver,
+        amount: amount,
+        type: type,
+      ));
+    }
+    return transactions;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    return [];
   }
-  return transactions;
 }
 
 Future<CurrentUser> getUserByPrivateKey(String privateKey) async {
