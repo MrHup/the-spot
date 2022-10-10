@@ -272,3 +272,50 @@ Future<CurrentUser> getUserByPrivateKey(String privateKey) async {
       created_spots: created_spots,
       transaction_ids: transaction_ids);
 }
+
+Future<bool> createNewSpot(final String name, final String imageUri,
+    final String privateKey, final BigInt basePrice) async {
+  print(
+      "<<<flavius_debug>>> Creating new spot with name: $name, imageUri: $imageUri, privateKey: $privateKey");
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final createUserFunction = contract.function('create_new_spot');
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: createUserFunction,
+          parameters: [name, imageUri, privateKey, basePrice],
+        ),
+        chainId: 53);
+    await client.dispose();
+
+    showSimpleToast("Spot created succesfully");
+    return true;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on registerUser");
+    print(e);
+    showSimpleToast("Error while spot creation");
+    return false;
+  }
+}
+
+void attemptCreateNewSpot(
+    BuildContext context,
+    final String name,
+    final String imageUri,
+    final String privateKey,
+    final BigInt basePrice) async {
+  blockUser(context);
+
+  final bool status =
+      await createNewSpot(name, imageUri, privateKey, basePrice);
+  Navigator.of(context).popUntil(ModalRoute.withName("/"));
+}

@@ -24,6 +24,9 @@ dependencies:
   flutter_bloc: ^8.0.1
   hydrated_bloc: ^8.1.0
   intl: ^0.17.0
+  dio: ^4.0.6
+  firebase_core: ^1.24.0
+  firebase_storage: ^10.3.11
 
   # android only
   flutter_displaymode: ^0.4.0

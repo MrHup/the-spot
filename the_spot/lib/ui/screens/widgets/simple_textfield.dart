@@ -11,22 +11,27 @@ class SimpleTextfield extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        obscureText: password,
-        controller: controller,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              width: 0,
-              style: BorderStyle.none,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 40),
+        child: TextField(
+          obscureText: password,
+          controller: controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: const BorderSide(
+                width: 0,
+                style: BorderStyle.none,
+              ),
             ),
+            hintStyle: Theme.of(context)
+                .textTheme
+                .caption!
+                .apply(fontFamily: 'Poppins'),
+            hintText: hint,
           ),
-          hintStyle:
-              Theme.of(context).textTheme.caption!.apply(fontFamily: 'Poppins'),
-          hintText: hint,
         ),
       ),
     );

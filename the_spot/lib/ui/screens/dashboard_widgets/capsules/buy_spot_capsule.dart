@@ -3,11 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/static_user.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
+import 'package:the_spot/data/repository/firebase_helper.dart';
+import 'package:the_spot/data/repository/popups.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/dashboard_drip.dart';
 import 'package:the_spot/ui/screens/widgets/simple_icon_button.dart';
 import 'package:the_spot/ui/screens/widgets/simple_textfield.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class BuySpotCapsule extends StatefulWidget {
   BuySpotCapsule({this.returnNeeded = false, super.key});
@@ -20,16 +27,28 @@ class BuySpotCapsule extends StatefulWidget {
 
 class _BuySpotCapsuleState extends State<BuySpotCapsule> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controllerPrice = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
   var _image = Image.asset('assets/img/placeholder.png');
+  String _imagePath = '';
 
   void getImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    print("Got image");
+
+    final url = await uploadFile(File(image!.path));
+    print("<<<<LINK>>>> $url");
     setState(() {
-      _image = Image.file(File(image!.path));
+      _image = Image.file(File(image.path));
     });
+    _imagePath = url;
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
   }
 
   @override
@@ -63,21 +82,48 @@ class _BuySpotCapsuleState extends State<BuySpotCapsule> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _image,
-                      SimpleTextfield(_controller, hint: "SPOT name"),
+                      GestureDetector(
+                        onTap: () {
+                          getImage();
+                        },
+                        child: _image.withPadding(8),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SimpleTextfield(_controller, hint: "SPOT Name"),
+                      SimpleTextfield(_controllerPrice, hint: "Base Price"),
                       Column(
                         children: [
                           ConstrainedBox(
-                              constraints: const BoxConstraints(maxHeight: 59),
-                              child: BorderButton(
-                                text: 'Add amount',
-                                icon: const Icon(Icons.add,
+                            constraints: const BoxConstraints(maxHeight: 59),
+                            child: BorderButton(
+                                text: 'Buy Spot',
+                                icon: const Icon(Icons.credit_card,
                                     color: AppThemes.accentColor),
                                 onPressed: () {
-                                  print("Just a top-up");
-                                  getImage();
-                                },
-                              )),
+                                  print("Create a new spot");
+                                  if (_controller.text.isEmpty ||
+                                      _controllerPrice.text.isEmpty ||
+                                      _imagePath.isEmpty) {
+                                    showSimpleToast(
+                                        "Please fill all the fields");
+                                  } else {
+                                    if (isNumeric(_controllerPrice.text)) {
+                                      attemptCreateNewSpot(
+                                          context,
+                                          _controller.text,
+                                          _imagePath,
+                                          GlobalVals.currentUser.privateKey,
+                                          BigInt.from(int.parse(
+                                              _controllerPrice.text)));
+                                    } else {
+                                      showSimpleToast(
+                                          "Please enter a valid price");
+                                    }
+                                  }
+                                }),
+                          ),
                           ConstrainedBox(
                               constraints: const BoxConstraints(maxHeight: 59),
                               child: SimpleIconButton(

@@ -11,6 +11,9 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 
 import 'package:wakelock/wakelock.dart';
 
@@ -27,6 +30,9 @@ void main() async {
   await Hive.initFlutter();
   final storage = await HydratedStorage.build(
     storageDirectory: tmpDir,
+  );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MainRouter());
 }
