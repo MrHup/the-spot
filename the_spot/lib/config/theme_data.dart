@@ -33,6 +33,11 @@ class AppThemes {
     fontSize: 12,
     fontWeight: FontWeight.w400,
   );
+  static const TextStyle text_balance_currency_accent = TextStyle(
+    color: AppThemes.accentColor,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
   static const TextStyle text_small_key = TextStyle(
     color: panelColor,
     fontSize: 12,

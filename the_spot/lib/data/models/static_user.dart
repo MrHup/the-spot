@@ -50,3 +50,12 @@ class CurrentUser {
 class GlobalVals {
   static CurrentUser currentUser = CurrentUser.returnEmptyUser();
 }
+
+Map<int, String> operationTypesEnum = {
+  0: "exchange",
+  1: "received",
+  2: "sent",
+  3: "spot_creation",
+  4: "spot_sale",
+  5: "transfer"
+};

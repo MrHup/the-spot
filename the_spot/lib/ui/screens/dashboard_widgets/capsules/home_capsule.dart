@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/models/static_user.dart';
+import 'package:the_spot/data/models/transactionw3.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
-import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
-import 'package:the_spot/ui/screens/login_screen.dart';
 
 import '../dashboard_drip.dart';
 
-class HomeCapsule extends StatelessWidget {
+class HomeCapsule extends StatefulWidget {
   HomeCapsule({super.key});
 
+  @override
+  State<HomeCapsule> createState() => _HomeCapsuleState();
+}
+
+class _HomeCapsuleState extends State<HomeCapsule> {
   int _currentBalance = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _transactionsFuture =
+        getTransactionsForUser(GlobalVals.currentUser.privateKey);
+  }
+
+  Future<List<TransactionW3>>? _transactionsFuture;
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +100,15 @@ class HomeCapsule extends StatelessWidget {
                           icon: const Icon(Icons.file_upload_outlined,
                               color: AppThemes.accentColor),
                           onPressed: () {
-                            PersistentNavBarNavigator.pushNewScreen(
-                              context,
-                              screen: TransferCapsule(returnNeeded: true),
-                              withNavBar: true,
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.cupertino,
-                            );
+                            // PersistentNavBarNavigator.pushNewScreen(
+                            //   context,
+                            //   screen: TransferCapsule(returnNeeded: true),
+                            //   withNavBar: true,
+                            //   pageTransitionAnimation:
+                            //       PageTransitionAnimation.cupertino,
+                            // );
+                            getTransactionsForUser(
+                                GlobalVals.currentUser.privateKey);
                           },
                         ).withExpanded(1),
                       ],
@@ -113,9 +128,20 @@ class HomeCapsule extends StatelessWidget {
                         border: Border.all(color: AppThemes.panelColor),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(25))),
-                    child: ListView(
-                      children: [Text("123"), Text("123"), Text("123")],
-                    ),
+                    child: FutureBuilder<List<TransactionW3>>(
+                        future: _transactionsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            print("Snapshot has data");
+                            return Container(
+                              child: Text("Hooray"),
+                            );
+                          }
+                          print("Snapshot does not have data");
+                          return const CircularProgressIndicator(
+                            color: AppThemes.accentColor,
+                          ).centered();
+                        }),
                   ).withPadding(16).withExpanded(1)
                 ],
               ),
