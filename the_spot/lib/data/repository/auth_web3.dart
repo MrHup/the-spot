@@ -14,7 +14,7 @@ import 'package:http/http.dart';
 
 const String rpcUrl = 'https://testnet-rpc.coinex.net';
 final EthereumAddress contractAddr =
-    EthereumAddress.fromHex('0xBec82cA758075766fE73b395A2627c6E1edaEdcE');
+    EthereumAddress.fromHex('0xd03B6Aaa9E832E99E6245110040Ba707dD1AE816');
 const String _privateKey =
     "0x0503d85eaf557849e40c4a7e6895aa2f6764c26af04fd02a36f5d0f3fa3954fc";
 

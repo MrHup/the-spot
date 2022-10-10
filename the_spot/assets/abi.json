@@ -5,111 +5,6 @@
 		"type": "constructor"
 	},
 	{
-		"inputs": [],
-		"name": "DEBUG_buy_spot",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_create_users",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_current_price",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_pv1_balance",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_pv2_balance",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_pv3_balance",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_pv4_balance",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_spot_owner",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "DEBUG_get_spot_owners_chain",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -161,30 +56,6 @@
 		"name": "buy_spot",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "int256",
-				"name": "chain_length",
-				"type": "int256"
-			},
-			{
-				"internalType": "int256",
-				"name": "spot_base_price",
-				"type": "int256"
-			}
-		],
-		"name": "calcualate_hotness_factor",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			}
-		],
-		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -242,32 +113,12 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string[]",
-						"name": "owners_chain",
-						"type": "string[]"
-					},
-					{
-						"internalType": "int256",
-						"name": "base_price",
-						"type": "int256"
-					},
-					{
 						"internalType": "int256",
 						"name": "current_price",
 						"type": "int256"
-					},
-					{
-						"internalType": "int256",
-						"name": "decay_rate",
-						"type": "int256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "last_reset_time",
-						"type": "uint256"
 					}
 				],
-				"internalType": "struct SpotCoin.Spot[]",
+				"internalType": "struct SpotCoin.SimpleSpot[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -308,32 +159,12 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string[]",
-						"name": "owners_chain",
-						"type": "string[]"
-					},
-					{
-						"internalType": "int256",
-						"name": "base_price",
-						"type": "int256"
-					},
-					{
 						"internalType": "int256",
 						"name": "current_price",
 						"type": "int256"
-					},
-					{
-						"internalType": "int256",
-						"name": "decay_rate",
-						"type": "int256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "last_reset_time",
-						"type": "uint256"
 					}
 				],
-				"internalType": "struct SpotCoin.Spot[]",
+				"internalType": "struct SpotCoin.SimpleSpot[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -374,32 +205,12 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string[]",
-						"name": "owners_chain",
-						"type": "string[]"
-					},
-					{
-						"internalType": "int256",
-						"name": "base_price",
-						"type": "int256"
-					},
-					{
 						"internalType": "int256",
 						"name": "current_price",
 						"type": "int256"
-					},
-					{
-						"internalType": "int256",
-						"name": "decay_rate",
-						"type": "int256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "last_reset_time",
-						"type": "uint256"
 					}
 				],
-				"internalType": "struct SpotCoin.Spot[]",
+				"internalType": "struct SpotCoin.SimpleSpot[]",
 				"name": "",
 				"type": "tuple[]"
 			}
@@ -428,39 +239,17 @@
 	},
 	{
 		"inputs": [],
-		"name": "get_last_transaction",
+		"name": "get_spot_amount",
 		"outputs": [
 			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "sender",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "receiver",
-						"type": "string"
-					},
-					{
-						"internalType": "int256",
-						"name": "amount",
-						"type": "int256"
-					},
-					{
-						"internalType": "enum SpotCoin.TransactionType",
-						"name": "transaction_type",
-						"type": "uint8"
-					}
-				],
-				"internalType": "struct SpotCoin.Transaction",
+				"internalType": "int256",
 				"name": "",
-				"type": "tuple"
+				"type": "int256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -474,7 +263,7 @@
 				"type": "uint256"
 			}
 		],
-		"name": "get_spot",
+		"name": "get_spot_by_index",
 		"outputs": [
 			{
 				"components": [
@@ -499,71 +288,14 @@
 						"type": "string"
 					},
 					{
-						"internalType": "string[]",
-						"name": "owners_chain",
-						"type": "string[]"
-					},
-					{
-						"internalType": "int256",
-						"name": "base_price",
-						"type": "int256"
-					},
-					{
 						"internalType": "int256",
 						"name": "current_price",
 						"type": "int256"
-					},
-					{
-						"internalType": "int256",
-						"name": "decay_rate",
-						"type": "int256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "last_reset_time",
-						"type": "uint256"
 					}
 				],
-				"internalType": "struct SpotCoin.Spot",
+				"internalType": "struct SpotCoin.SimpleSpot",
 				"name": "",
 				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "get_spot_amount",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "spot_id",
-				"type": "uint256"
-			}
-		],
-		"name": "get_spot_chain_lenght",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
 			}
 		],
 		"stateMutability": "view",
@@ -610,62 +342,6 @@
 				"internalType": "struct SpotCoin.Transaction[]",
 				"name": "",
 				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "get_user_by_index",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "index",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "private_key",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "public_key",
-						"type": "string"
-					},
-					{
-						"internalType": "int256",
-						"name": "balance",
-						"type": "int256"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "owned_spots",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "created_spots",
-						"type": "uint256[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "transaction_ids",
-						"type": "uint256[]"
-					}
-				],
-				"internalType": "struct SpotCoin.User",
-				"name": "",
-				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -784,19 +460,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "get_users_length",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "string",
@@ -835,30 +498,6 @@
 				"internalType": "uint256[]",
 				"name": "",
 				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "spot_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "index",
-				"type": "uint256"
-			}
-		],
-		"name": "test_code",
-		"outputs": [
-			{
-				"internalType": "int256",
-				"name": "",
-				"type": "int256"
 			}
 		],
 		"stateMutability": "view",
