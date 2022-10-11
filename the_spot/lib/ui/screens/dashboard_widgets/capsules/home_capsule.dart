@@ -5,6 +5,7 @@ import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/data/models/transactionw3.dart';
 import 'package:the_spot/data/repository/auth_web3.dart';
+import 'package:the_spot/data/repository/popups.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/exchange_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/transfer_capsule.dart';
@@ -29,12 +30,28 @@ class _HomeCapsuleState extends State<HomeCapsule> {
         getTransactionsForUser(GlobalVals.currentUser.privateKey);
   }
 
+  void refresh() async {
+    // _transactionsFuture = getTransactionsForUserWithBlock(
+    //     context, GlobalVals.currentUser.privateKey);
+    // await _transactionsFuture;
+    // setState(() {});
+    attemptLoginProcessed(context, GlobalVals.currentUser.privateKey);
+  }
+
   Future<List<TransactionW3>>? _transactionsFuture;
 
   @override
   Widget build(BuildContext context) {
     _currentBalance = GlobalVals.currentUser.balance.toInt();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          showSimpleToast("Refreshing data");
+          refresh();
+        },
+        child: const Icon(Icons.replay_outlined),
+        backgroundColor: AppThemes.accentColor,
+      ).withPadding(8),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(children: [
         const DashboardDrip(),

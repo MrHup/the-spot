@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/spot.dart';
 import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/data/models/transactionw3.dart';
 import 'package:the_spot/data/repository/generate_key.dart';
@@ -14,7 +15,7 @@ import 'package:http/http.dart';
 
 const String rpcUrl = 'https://testnet-rpc.coinex.net';
 final EthereumAddress contractAddr =
-    EthereumAddress.fromHex('0xd03B6Aaa9E832E99E6245110040Ba707dD1AE816');
+    EthereumAddress.fromHex('0xf03c6E25636d12174D3ec6EDA0a1b358F5a366D2');
 const String _privateKey =
     "0x0503d85eaf557849e40c4a7e6895aa2f6764c26af04fd02a36f5d0f3fa3954fc";
 
@@ -120,8 +121,26 @@ void attemptLogin(BuildContext context, String rawPrivateKey) async {
         "<<<flavius_debug>>> global pv is now: ${GlobalVals.currentUser.privateKey}");
     // save hash to persistent storage
     var persistentStorage = await Hive.openBox('userData');
-    persistentStorage.put("privateKey", privateKey);
+    persistentStorage.put("privateKey", GlobalVals.currentUser.privateKey);
     Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+  }
+}
+
+void attemptLoginProcessed(BuildContext context, String privateKey) async {
+  blockUser(context);
+
+  CurrentUser? user = await loginUser(privateKey);
+
+  if (user != null && user.privateKey != "") {
+    print("<<<flavius_debug>>> User logged in with privatekey: $privateKey");
+    GlobalVals.currentUser = user;
+    print(
+        "<<<flavius_debug>>> global pv is now: ${GlobalVals.currentUser.privateKey}");
+    // save hash to persistent storage
+    var persistentStorage = await Hive.openBox('userData');
+    persistentStorage.put("privateKey", GlobalVals.currentUser.privateKey);
+    Navigator.of(context, rootNavigator: true)
+        .pushNamedAndRemoveUntil("/dashboard", (route) => false);
   }
 }
 
@@ -145,7 +164,7 @@ Future<bool> addMoneyToUser(String privateKey, int amount) async {
           parameters: [privateKey, amountBigInt],
         ),
         chainId: 53);
-
+    GlobalVals.currentUser.balance += BigInt.from(amount);
     await client.dispose();
     showSimpleToast("Topup success");
     return true;
@@ -159,8 +178,11 @@ Future<bool> addMoneyToUser(String privateKey, int amount) async {
 
 void attemptAddMoney(
     BuildContext context, String privateKey, int amount) async {
-  // blockUser(context);
+  blockUser(context);
   final bool status = await addMoneyToUser(privateKey, amount);
+  // Navigator.of(context, rootNavigator: true).pop();
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
   updateUserBalance(privateKey);
 }
 
@@ -244,6 +266,55 @@ Future<List<TransactionW3>> getTransactionsForUser(String privateKey) async {
   }
 }
 
+Future<List<TransactionW3>> getTransactionsForUserWithBlock(
+    BuildContext context, String privateKey) async {
+  try {
+    blockUser(context);
+    print("<<<flavius_Debug>>> Getting transactions for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final getTransactionsForUser =
+        contract.function('get_transactions_for_user');
+
+    final dev = await client.call(
+        contract: contract,
+        function: getTransactionsForUser,
+        params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev is $dev");
+    List<TransactionW3> transactions = [];
+    for (var transaction in dev[0]) {
+      var dt = DateTime.fromMillisecondsSinceEpoch(transaction[0].toInt());
+      var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
+
+      final String sender = transaction[1];
+      final String receiver = transaction[2];
+      final int amount = transaction[3].toInt();
+      final String date = d24;
+      final int typeNr = transaction[4].toInt();
+      final String type = GlobalVals.operationTypesEnum[typeNr] ?? "Unknown";
+
+      transactions.add(TransactionW3(
+        date: date,
+        sender: sender,
+        receiver: receiver,
+        amount: amount,
+        type: type,
+      ));
+    }
+    Navigator.of(context, rootNavigator: true).pop();
+    return transactions;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    Navigator.of(context, rootNavigator: true).pop();
+    return [];
+  }
+}
+
 Future<CurrentUser> getUserByPrivateKey(String privateKey) async {
   final client = Web3Client(rpcUrl, Client());
   final abiCode = await rootBundle.loadString('assets/abi.json');
@@ -313,8 +384,11 @@ void attemptCreateNewSpot(
     final String imageUri,
     final String privateKey,
     final BigInt basePrice) async {
+  blockUser(context);
   final bool status =
       await createNewSpot(name, imageUri, privateKey, basePrice);
+  Navigator.of(context, rootNavigator: true).pop();
+  Navigator.pop(context);
 }
 
 void transferMoney(String sender, String receiver, BigInt amount) async {
@@ -344,4 +418,185 @@ void transferMoney(String sender, String receiver, BigInt amount) async {
     print(e);
     showSimpleToast("Error while transfering");
   }
+}
+
+Future<List<Spot>> getAllSpotsCreatedByUser(String privateKey) async {
+  try {
+    print("<<<flavius_Debug>>> Getting spots for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    print("<<<flavius_Debug>>> Client created");
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    print("<<<flavius_Debug>>> abi loaded");
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+    print("<<<flavius_Debug>>> contract created");
+
+    final getSpotsForUser = contract.function('get_all_spots_created_by_user');
+    print("<<<flavius_Debug>>> function created");
+
+    final dev = await client.call(
+        contract: contract, function: getSpotsForUser, params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev is $dev");
+    List<Spot> spots = [];
+    for (var spot in dev[0]) {
+      print(spot);
+      final int id = spot[0].toInt();
+      print("received id: $id");
+      final String name = spot[1];
+      print("received name: $name");
+      final String imageUri = spot[2];
+      print("received imageUri: $imageUri");
+      final String owner = spot[3];
+      print("received owner: $owner");
+      final int currentPrice = spot[4].toInt();
+      print("received currentPrice: $currentPrice");
+
+      spots.add(Spot(
+        index: id,
+        name: name,
+        image_uri: imageUri,
+        current_owner: owner,
+        current_price: currentPrice,
+      ));
+    }
+
+    return spots;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    return [];
+  }
+}
+
+Future<List<Spot>> getAllSpotsOwnedByUser(String privateKey) async {
+  try {
+    print("<<<flavius_Debug>>> Getting spots for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    print("<<<flavius_Debug>>> Client created");
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    print("<<<flavius_Debug>>> abi loaded");
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+    print("<<<flavius_Debug>>> contract created");
+
+    final getSpotsForUser = contract.function('get_all_spots_owned_by_user');
+    print("<<<flavius_Debug>>> function created");
+
+    final dev = await client.call(
+        contract: contract, function: getSpotsForUser, params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev owned is $dev");
+    List<Spot> spots = [];
+    for (var spot in dev[0]) {
+      print(spot);
+      final int id = spot[0].toInt();
+      print("received id: $id");
+      final String name = spot[1];
+      print("received name: $name");
+      final String imageUri = spot[2];
+      print("received imageUri: $imageUri");
+      final String owner = spot[3];
+      print("received owner: $owner");
+      final int currentPrice = spot[4].toInt();
+      print("received currentPrice: $currentPrice");
+
+      spots.add(Spot(
+        index: id,
+        name: name,
+        image_uri: imageUri,
+        current_owner: owner,
+        current_price: currentPrice,
+      ));
+    }
+
+    return spots;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    return [];
+  }
+}
+
+Future<bool> buySpot(String privateKey, BigInt spotId) async {
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final buySpotFunction = contract.function('buy_spot');
+
+    print("Buying spot with id: $spotId");
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: buySpotFunction,
+          parameters: [privateKey, spotId],
+        ),
+        chainId: 53);
+
+    await client.dispose();
+    showSimpleToast("Bought spot with success");
+    return true;
+  } catch (e) {
+    showSimpleToast("Error on buying spot");
+    print("<<<flavius_debug>>> Error on topup");
+    print(e);
+    return false;
+  }
+}
+
+void attemptBuySpot(
+    BuildContext context, String privateKey, BigInt spotId) async {
+  blockUser(context);
+  await buySpot(privateKey, spotId);
+  // Navigator.of(context, rootNavigator: true).pop();
+  // Navigator.pop(context);
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
+}
+
+Future<bool> updateSpotImage(
+    BigInt spotId, String imageUri, String privateKey) async {
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final updateSpotFunction = contract.function('update_spot_image');
+
+    print("Update image spot with id: $spotId");
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: updateSpotFunction,
+          parameters: [spotId, imageUri, privateKey],
+        ),
+        chainId: 53);
+
+    await client.dispose();
+    showSimpleToast("Update spot with success");
+    return true;
+  } catch (e) {
+    showSimpleToast("Error on updating spot");
+    print("<<<flavius_debug>>> Error on update spot");
+    print(e);
+    return false;
+  }
+}
+
+void attemptUpdateSpotImage(BuildContext context, BigInt spotId,
+    String imageUri, String privateKey) async {
+  blockUser(context);
+  await updateSpotImage(spotId, imageUri, privateKey);
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
 }

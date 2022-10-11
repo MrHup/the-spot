@@ -440,6 +440,8 @@ contract SpotCoin {
                         log_transaction("Owners chain", users[pb_users_map[global_spots[spot_id].owners_chain[i]]].public_key, 
                                         commission, TransactionType.spot_sale);
                     }
+                    
+                    string memory last_owner_pb = global_spots[spot_id].current_owner;
 
                     // change the current owner to the buyer
                     global_spots[spot_id].current_owner = users[pv_users_map[buyer_pv]].public_key;
@@ -450,7 +452,21 @@ contract SpotCoin {
                     global_spots[spot_id].current_price += 
                         calcualate_hotness_factor(int(global_spots[spot_id].owners_chain.length), global_spots[spot_id].base_price);
 
-
+                    // remove the spot from the old owner
+                    for (uint i = 0; i < users[pb_users_map[last_owner_pb]].owned_spots.length; i++)
+                    {
+                        if (users[pb_users_map[last_owner_pb]].owned_spots[i] == spot_id)
+                        {
+                            users[pb_users_map[last_owner_pb]].owned_spots[i] = 
+                                users[pb_users_map[last_owner_pb]].owned_spots[
+                                    users[pb_users_map[last_owner_pb]].owned_spots.length - 1];
+                            users[pb_users_map[last_owner_pb]].owned_spots.pop();
+                            break;
+                        }
+                    }
+                    
+                    // add the spot to the buyer
+                    users[pv_users_map[buyer_pv]].owned_spots.push(spot_id);
 
                 }
                 else revert ("Not enough money in account");

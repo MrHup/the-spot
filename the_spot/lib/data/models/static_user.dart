@@ -1,3 +1,5 @@
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 class CurrentUser {
   // inititalize user
   CurrentUser(
@@ -58,4 +60,6 @@ class GlobalVals {
     4: "spot_sale",
     5: "transfer"
   };
+
+  static QRViewController? controller;
 }
