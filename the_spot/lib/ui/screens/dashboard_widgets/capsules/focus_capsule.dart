@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/models/spot.dart';
@@ -55,7 +56,7 @@ class FocusCapsule extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppThemes.panelColor,
                         border: Border.all(color: AppThemes.panelColor),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(0))),
@@ -64,22 +65,19 @@ class FocusCapsule extends StatelessWidget {
                       children: [
                         Image.network(spot.image_uri),
                       ],
-                    ),
+                    ).withPadding(4),
                   ).withPadding(16).withExpanded(1)
                 ],
               ),
-            ).withExpanded(8),
-            Column(
-              children: [
-                const Icon(
-                  Icons.nfc_outlined,
-                  color: AppThemes.accentColor,
-                ),
-                const Text(
-                    "You can place your ad here with TSPOT. Tap with the app",
-                    style: AppThemes.text_balance_currency)
-              ],
-            ).withExpanded(1),
+            ).withExpanded(32),
+            Center(
+              child: QrImage(
+                backgroundColor: Colors.white,
+                data: "${spot.index}-the-spot",
+                version: QrVersions.auto,
+              ),
+            ).withPadding(8).withExpanded(6),
+            Container().withExpanded(2),
           ],
         )
       ]),

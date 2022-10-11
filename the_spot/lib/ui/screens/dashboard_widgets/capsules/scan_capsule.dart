@@ -1,58 +1,74 @@
 import 'dart:convert';
-import 'package:ndef/ndef.dart' as ndef;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
+import 'package:the_spot/data/models/static_user.dart';
+import 'package:the_spot/data/repository/auth_web3.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/dashboard_drip.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 
-class ScanCapsule extends StatelessWidget {
-  const ScanCapsule({super.key});
+class ScanCapsule extends StatefulWidget {
+  ScanCapsule({super.key});
 
-  void enableNFC(BuildContext context) async {
-    try {
-      var availability = await FlutterNfcKit.nfcAvailability;
-      if (availability != NFCAvailability.available) {
-        // oh-no
-      }
+  @override
+  State<ScanCapsule> createState() => _ScanCapsuleState();
+}
 
-// timeout only works on Android, while the latter two messages are only for iOS
-      var tag = await FlutterNfcKit.poll(
-          timeout: Duration(seconds: 10),
-          iosMultipleTagMessage: "Multiple tags found!",
-          iosAlertMessage: "Scan your tag");
+class _ScanCapsuleState extends State<ScanCapsule> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-      print(jsonEncode(tag));
+  Barcode? result;
 
-      // read NDEF records if available
-      if (tag.ndefAvailable != null) {
-        print("NDEF available");
-        if (tag.ndefAvailable!) {
-          for (var record
-              in await FlutterNfcKit.readNDEFRecords(cached: false)) {
-            print(record.toString());
-          }
-
-          for (var record
-              in await FlutterNfcKit.readNDEFRawRecords(cached: false)) {
-            print(jsonEncode(record).toString());
-          }
-        }
-
-        /// raw NDEF records (data in hex string)
-        /// `{identifier: "", payload: "00010203", type: "0001", typeNameFormat: "nfcWellKnown"}`
-        for (var record
-            in await FlutterNfcKit.readNDEFRawRecords(cached: false)) {
-          print(jsonEncode(record).toString());
-        }
-      }
-
-      print("finish up");
-      await FlutterNfcKit.finish();
-    } on Exception catch (e) {
-      print(e);
+  @override
+  void reassemble() {
+    print("REASSEMBLE");
+    super.reassemble();
+    if (Platform.isAndroid) {
+      GlobalVals.controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      GlobalVals.controller!.resumeCamera();
     }
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
+  int getCorrectId(String string) {
+    try {
+      String result = string.substring(0, string.indexOf('-the-spot'));
+      if (isNumeric(result)) {
+        return int.parse(result);
+      }
+    } catch (e) {
+      return -1;
+    }
+    return -1;
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    GlobalVals.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
+        if (result != null) {
+          if (result!.code != null) {
+            int id = getCorrectId(result!.code!);
+            if (id != -1) {
+              GlobalVals.controller!.pauseCamera();
+              print("id $id");
+              attemptBuySpot(
+                  context, GlobalVals.currentUser.privateKey, BigInt.from(id));
+            }
+          }
+        }
+      });
+    });
   }
 
   @override
@@ -72,10 +88,7 @@ class ScanCapsule extends StatelessWidget {
                     maxWidth: MediaQuery.of(context).size.width * 0.8,
                     maxHeight: 50,
                   ),
-                  child: GestureDetector(
-                      onTap: () => enableNFC(context),
-                      child: const Image(
-                          image: AssetImage('assets/img/logo.png'))),
+                  child: const Image(image: AssetImage('assets/img/logo.png')),
                 ).withPadding(8),
               ],
             ),
@@ -94,9 +107,10 @@ class ScanCapsule extends StatelessWidget {
                         border: Border.all(color: AppThemes.panelColor),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(25))),
-                    child: const Image(
-                            image: AssetImage('assets/img/spot_scan.png'))
-                        .withPadding(20),
+                    child: QRView(
+                      key: qrKey,
+                      onQRViewCreated: _onQRViewCreated,
+                    ),
                   ).withPadding(16).withExpanded(1)
                 ],
               ),

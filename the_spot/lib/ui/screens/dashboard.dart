@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/config/custom_extensions.dart';
+import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/account_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/home_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/scan_capsule.dart';
@@ -21,6 +23,16 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void pauseCamera() {
+    if (GlobalVals.controller == null) return;
+    GlobalVals.controller!.stopCamera();
+  }
+
+  void resumeCamera() {
+    if (GlobalVals.controller == null) return;
+    GlobalVals.controller!.resumeCamera();
   }
 
   final String info =
@@ -81,6 +93,14 @@ class _DashboardState extends State<Dashboard> {
       child: PersistentTabView(
         context,
         controller: _controller,
+        onItemSelected: (int index) {
+          if (index != 2) {
+            pauseCamera();
+          } else {
+            resumeCamera();
+          }
+          print("Item pressed");
+        },
         screens: _buildScreens(),
         items: _navBarsItems(),
         backgroundColor: AppThemes.panelColor,

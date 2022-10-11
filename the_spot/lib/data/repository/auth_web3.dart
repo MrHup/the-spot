@@ -146,7 +146,7 @@ Future<bool> addMoneyToUser(String privateKey, int amount) async {
           parameters: [privateKey, amountBigInt],
         ),
         chainId: 53);
-
+    GlobalVals.currentUser.balance += BigInt.from(amount);
     await client.dispose();
     showSimpleToast("Topup success");
     return true;
@@ -162,8 +162,9 @@ void attemptAddMoney(
     BuildContext context, String privateKey, int amount) async {
   blockUser(context);
   final bool status = await addMoneyToUser(privateKey, amount);
-  Navigator.of(context, rootNavigator: true).pop();
-  Navigator.pop(context);
+  // Navigator.of(context, rootNavigator: true).pop();
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
   updateUserBalance(privateKey);
 }
 
@@ -448,4 +449,46 @@ Future<List<Spot>> getAllSpotsOwnedByUser(String privateKey) async {
     print(e);
     return [];
   }
+}
+
+Future<bool> buySpot(String privateKey, BigInt spotId) async {
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final buySpotFunction = contract.function('buy_spot');
+
+    print("Buying spot with id: $spotId");
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: buySpotFunction,
+          parameters: [privateKey, spotId],
+        ),
+        chainId: 53);
+
+    await client.dispose();
+    showSimpleToast("Bought spot with success");
+    return true;
+  } catch (e) {
+    showSimpleToast("Error on buying spot");
+    print("<<<flavius_debug>>> Error on topup");
+    print(e);
+    return false;
+  }
+}
+
+void attemptBuySpot(
+    BuildContext context, String privateKey, BigInt spotId) async {
+  blockUser(context);
+  await buySpot(privateKey, spotId);
+  // Navigator.of(context, rootNavigator: true).pop();
+  // Navigator.pop(context);
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
 }
