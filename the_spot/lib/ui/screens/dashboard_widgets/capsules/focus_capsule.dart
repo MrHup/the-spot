@@ -1,12 +1,44 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:ndef/ndef.dart' as ndef;
+import 'package:nfc_emulator/nfc_emulator.dart';
+
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/models/spot.dart';
+import 'package:the_spot/data/repository/popups.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/dashboard_drip.dart';
 
-class FocusCapsule extends StatelessWidget {
+class FocusCapsule extends StatefulWidget {
   FocusCapsule(this.spot, {super.key});
   final Spot spot;
+
+  @override
+  State<FocusCapsule> createState() => _FocusCapsuleState();
+}
+
+class _FocusCapsuleState extends State<FocusCapsule> {
+  @override
+  void initState() {
+    enableNFC(context);
+    super.initState();
+  }
+
+  void enableNFC(BuildContext context) async {
+    try {
+      print("STARTED NFC WRITE");
+      final nfcStatus = await NfcEmulator.nfcStatus;
+      print("NFC STATUS: $nfcStatus");
+      await NfcEmulator.startNfcEmulator(
+          "666B65630001", "cd22c716", "79e64d05ed6475d3acf405d6a9cd506b");
+
+      print("finish up");
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +73,7 @@ class FocusCapsule extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            spot.current_price.toString(),
+                            widget.spot.current_price.toString(),
                             style: AppThemes.text_spot_accent,
                           ),
                           const Text(
@@ -50,7 +82,7 @@ class FocusCapsule extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(spot.name, style: AppThemes.text_spot_white)
+                      Text(widget.spot.name, style: AppThemes.text_spot_white)
                     ],
                   ),
                   Container(
@@ -62,7 +94,7 @@ class FocusCapsule extends StatelessWidget {
                     child: ListView(
                       padding: const EdgeInsets.all(8),
                       children: [
-                        Image.network(spot.image_uri),
+                        Image.network(widget.spot.image_uri),
                       ],
                     ),
                   ).withPadding(16).withExpanded(1)

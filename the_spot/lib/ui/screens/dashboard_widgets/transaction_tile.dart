@@ -54,7 +54,7 @@ class TransactionTile extends StatelessWidget {
             children: [
               Text(date, style: AppThemes.text_balance_currency),
               type != "exchange"
-                  ? Text("from:$from", style: AppThemes.text_balance_currency)
+                  ? Text("to: $from", style: AppThemes.text_balance_currency)
                   : Container(),
             ],
           ),
