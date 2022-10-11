@@ -1,11 +1,14 @@
-// 
+//
 // Features
-// 
-
+//
 
 // Styling for the features icons
 .icon-feature {
     font-size: 4rem;
+}
+
+.bg-darker {
+    background-color: #1c1b20 !important;
 }
 
 // Styling for the iPhone X mockup in the features section
@@ -59,7 +62,6 @@
     .device-wrapper {
         max-width: 10rem;
     }
-
 }
 
 // Sizing for the device and SVG background circle (sm screen size breakpoint)

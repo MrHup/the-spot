@@ -8,9 +8,9 @@ html(lang='en')
         meta(name='description', content='')
         meta(name='author', content='')
 
-        title New Age - Start Bootstrap Theme
+        title The SPOT
 
-        link(rel='icon', type='image/x-icon', href='assets/favicon.ico')
+        link(rel='icon', type='image/x-icon', href='assets/img/logo-small.png')
 
         // Bootstrap icons
         link(href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css', rel='stylesheet')
@@ -29,20 +29,43 @@ html(lang='en')
         // Navigation
         nav#mainNav.navbar.navbar-expand-lg.navbar-light.fixed-top.shadow-sm
             .container.px-5
-                a.navbar-brand.fw-bold(href='#page-top') Start Bootstrap
-                button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
-                    | Menu
-                    i.bi-list
-                #navbarResponsive.collapse.navbar-collapse
-                    ul.navbar-nav.ms-auto.me-4.my-3.my-lg-0
-                        li.nav-item
-                            a.nav-link.me-lg-3(href='#features') Features
-                        li.nav-item
-                            a.nav-link.me-lg-3(href='#download') Download
-                    button.btn.btn-primary.rounded-pill.px-3.mb-2.mb-lg-0(data-bs-toggle='modal', data-bs-target='#feedbackModal')
-                        span.d-flex.align-items-center
-                            i.bi-chat-text-fill.me-2
-                            span.small Send Feedback
+                img.app-badge(src='assets/img/logo.png', style='text-align: left')
+                //- a.navbar-brand.fw-bold(href='#page-top') Start Bootstrap
+                //- button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+                //-     | Menu
+                //-     i.bi-list
+                a(href="https://github.com/MrHup/the-spot")
+                    button.btn.btn-primary.rounded-pill.px-3.mb-2.mb-lg-0(data-bs-toggle='modal', data-bs-target='_self', style='background-color: #1c1b20 !important;')
+                            span.d-flex.align-items-center
+                                img.app-badge(src='assets/img/github-white.svg', style="max-height: 2rem;")
+                                |&nbsp;&nbsp;
+                                span.small Github
+                //- #navbarResponsive.collapse.navbar-collapse
+                    //- ul.navbar-nav.ms-auto.me-4.my-3.my-lg-0
+                    //-     li.nav-item
+                    //-         img.app-badge(src='assets/img/github.svg')
+                    //-         a.nav-link.me-lg-3(href='https://github.com/MrHup/the-spot') Github Repo
+                    //-     li.nav-item
+                    //-         a.nav-link.me-lg-3(href='#download') Download
+                    
+        //- // title screen
+        //- header.masthead-dark
+        //-     .container.px-14
+        //-         .row.gx-14.align-items-center.masthead-border
+        //-             .col-lg-6
+        //-                 // Mashead text and app badges
+        //-                 .mb-5.mb-lg-0.text-center.text-lg-start
+        //-                     h1.text-white.display-1.lh-1.mb-4 Welcome to
+        //-                     //- p.lead.fw-normal.text-muted.mb-5 Advertise easier and generate passive income from using our SPOTS.
+        //-             .col-lg-6
+        //-                 img(src='assets/img/logo_white.png' style='max-width: 100%;')
+                            //- .d-flex.flex-column.flex-lg-row.align-items-center
+                            //-     a.me-lg-3.mb-4.mb-lg-0(href='#!')
+                            //-         img.app-badge(src='assets/img/google-play-badge.svg', alt='...')
+                                //- a(href='#!')
+                                //-     img.app-badge(src='assets/img/app-store-badge.svg', alt='...')
+                    //- .col-lg-6
+                        
 
         // Mashead header
         header.masthead
@@ -51,13 +74,13 @@ html(lang='en')
                     .col-lg-6
                         // Mashead text and app badges
                         .mb-5.mb-lg-0.text-center.text-lg-start
-                            h1.display-1.lh-1.mb-3 Showcase your app beautifully.
-                            p.lead.fw-normal.text-muted.mb-5 Launch your mobile app landing page faster with this free, open source theme from Start Bootstrap!
-                            .d-flex.flex-column.flex-lg-row.align-items-center
-                                a.me-lg-3.mb-4.mb-lg-0(href='#!')
-                                    img.app-badge(src='assets/img/google-play-badge.svg', alt='...')
-                                a(href='#!')
-                                    img.app-badge(src='assets/img/app-store-badge.svg', alt='...')
+                            h1.display-1.lh-1.mb-4 Own your next SPOT.
+                            p.lead.fw-normal.text-muted.mb-5 A descentralized marketing platform powered by the CoinEx SmartChain.
+                            //- .d-flex.flex-column.flex-lg-row.align-items-center
+                            //-     a.me-lg-3.mb-4.mb-lg-0(href='#!')
+                            //-         img.app-badge(src='assets/img/google-play-badge.svg', alt='...')
+                                //- a(href='#!')
+                                //-     img.app-badge(src='assets/img/app-store-badge.svg', alt='...')
                     .col-lg-6
                         // Masthead device mockup feature
                         .masthead-device-mockup
@@ -71,16 +94,19 @@ html(lang='en')
                                         // * * This can be a video, image, or just about anything else.
                                         // * * Set the max width of your media to 100% and the height to
                                         // * * 100% like the demo example below.
-                                        video(muted='muted', autoplay='', loop='', style='max-width: 100%; height: 100%;')
-                                            source(src='assets/img/demo-screen.mp4', type='video/mp4')
+                                        //- video(muted='muted', autoplay='', loop='', style='max-width: 100%; height: 100%;')
+                                        //-     source(src='assets/img/demo-screen.mp4', type='video/mp4')
+                                        img(src='assets/img/1st-screen.jpeg', alt='...', style='max-width: 100%; height: 100%;')
+                                        
 
         // Quote/testimonial aside
         aside.text-center.bg-gradient-primary-to-secondary
             .container.px-5
                 .row.gx-5.justify-content-center
                     .col-xl-8
-                        .h2.fs-1.text-white.mb-4 "An intuitive solution to a common problem that we all face, wrapped up in a single app!"
-                        img(src='assets/img/tnw-logo.svg', alt='...', style='height: 3rem;')
+                        .h2.fs-1.text-white.mb-4 "If only I could monetize air itself for ads..."
+                        .h5.fs-3.text-white.mb-4 - a venetian pizza parlor owner
+                        //- img(src='assets/img/tnw-logo.svg', alt='...', style='height: 3rem;')
 
         // App features section
         section#features
@@ -93,27 +119,27 @@ html(lang='en')
                                     // Feature item
                                     .text-center
                                         i.bi-phone.icon-feature.text-gradient.d-block.mb-3
-                                        h3.font-alt Device Mockups
-                                        p.text-muted.mb-0 Ready to use HTML/CSS device mockups, no Photoshop required!
+                                        h3.font-alt Easy to Use
+                                        p.text-muted.mb-0 Anyone can create and own a SPOT with just a few taps!
                                 .col-md-6.mb-5
                                     // Feature item
                                     .text-center
                                         i.bi-camera.icon-feature.text-gradient.d-block.mb-3
-                                        h3.font-alt Flexible Use
-                                        p.text-muted.mb-0 Put an image, video, animation, or anything else in the screen!
+                                        h3.font-alt One Scan Payments
+                                        p.text-muted.mb-0 Just scan the QR code near a SPOT and you are the new owner!
                             .row
                                 .col-md-6.mb-5.mb-md-0
                                     // Feature item
                                     .text-center
                                         i.bi-gift.icon-feature.text-gradient.d-block.mb-3
-                                        h3.font-alt Free to Use
-                                        p.text-muted.mb-0 As always, this theme is free to download and use for any purpose!
+                                        h3.font-alt Get Paid While Sleeping
+                                        p.text-muted.mb-0 It has never been easier to generate passive income and promote your business!
                                 .col-md-6
                                     // Feature item
                                     .text-center
                                         i.bi-patch-check.icon-feature.text-gradient.d-block.mb-3
-                                        h3.font-alt Open Source
-                                        p.text-muted.mb-0 Since this theme is MIT licensed, you can use it commercially!
+                                        h3.font-alt What You See is What You Get.
+                                        p.text-muted.mb-0 CoinEx SmartChain: trust your money is going where it should!
                     .col-lg-4.order-lg-0
                         // Features section device mockup
                         .features-device-mockup
@@ -128,49 +154,51 @@ html(lang='en')
                                         // * * Set the max width of your media to 100% and the height to
                                         // * * 100% like the demo example below.
                                         video(muted='muted', autoplay='', loop='', style='max-width: 100%; height: 100%;')
-                                            source(src='assets/img/demo-screen.mp4', type='video/mp4')
+                                            source(src='assets/demo-app-fast.mp4', type='video/mp4')
+                                        //- img(src='assets/img/1st-screen.jpeg', alt='...', style='max-width: 100%; height: 100%;')
 
         // Basic features section
-        section.bg-light
+        section.bg-light.bg-darker
             .container.px-5
                 .row.gx-5.align-items-center.justify-content-center.justify-content-lg-between
                     .col-12.col-lg-5
-                        h2.display-4.lh-1.mb-4 Enter a new age of web design
-                        p.lead.fw-normal.text-muted.mb-5.mb-lg-0 This section is perfect for featuring some information about your application, why it was built, the problem it solves, or anything else! There's plenty of space for text here, so don't worry about writing too much.
+                        h2.display-4.lh-1.text-white.mb-4 Advertise smarter with SPOTS
+                        p.lead.fw-normal.text-white.mb-5.mb-lg-0 Easy to create and setup a new SPOT at the location of yor choosing. Just a few taps and new customers can enjoy your latest cretions.
                     .col-sm-8.col-md-6
                         .px-5.px-sm-0
-                            img.img-fluid.rounded-circle(src='https://source.unsplash.com/u8Jn2rzYIps/900x900', alt='...')
+                            img.img-fluid.rounded-circle(src='assets/img/nature.jpeg', alt='...')
+                    
 
         // Call to action section
         section.cta
             .cta-content
                 .container.px-5
-                    h2.text-white.display-1.lh-1.mb-4
-                        | Stop waiting.
+                    h1.text-white.display-1.lh-1.mb-4
+                        | Stop missing out.
                         br
-                        | Start building.
-                    a.btn.btn-outline-light.py-3.px-4.rounded-pill(href='https://startbootstrap.com/theme/new-age', target='_blank') Download for free
+                        | Become a SPOT owner now.
+                    a.btn.btn-outline-light.py-3.px-4.rounded-pill(href='https://drive.google.com/file/d/1F0pTINkUQYsvTZm6KFZdxywQdkk_zNm7/view?usp=sharing', target='_self') Download for free
 
         // App badge section
         section#download.bg-gradient-primary-to-secondary
             .container.px-5
-                h2.text-center.text-white.font-alt.mb-4 Get the app now!
+                h2.text-center.text-white.font-alt.mb-4 Coming soon on Google Play!
                 .d-flex.flex-column.flex-lg-row.align-items-center.justify-content-center
-                    a.me-lg-3.mb-4.mb-lg-0(href='#!')
-                        img.app-badge(src='assets/img/google-play-badge.svg', alt='...')
-                    a(href='#!')
-                        img.app-badge(src='assets/img/app-store-badge.svg', alt='...')
+                    //- a.me-lg-3.mb-4.mb-lg-0(href='#!')
+                    img.app-badge(src='assets/img/google-play-badge.svg', alt='...')
+                    //- a(href='#!')
+                        //- img.app-badge(src='assets/img/app-store-badge.svg', alt='...')
 
         // Footer
         footer.bg-black.text-center.py-5
             .container.px-5
                 .text-white-50.small
-                    .mb-2 &copy; Your Website 2022. All Rights Reserved.
-                    a(href='#!') Privacy
-                    span.mx-1 &middot;
-                    a(href='#!') Terms
-                    span.mx-1 &middot;
-                    a(href='#!') FAQ
+                    .mb-2 &copy; The SPOT 2022. All Rights Reserved.
+                    //- a(href='#!') Privacy
+                    //- span.mx-1 &middot;
+                    //- a(href='#!') Terms
+                    //- span.mx-1 &middot;
+                    //- a(href='#!') FAQ
         
         include includes/feedback-modal.pug
 

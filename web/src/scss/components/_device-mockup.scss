@@ -38,7 +38,8 @@
     padding-bottom: 198.898071625%;
 }
 
-.device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"] .screen {
+.device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"]
+    .screen {
     top: 3.1855955679%;
     left: 6.8870523416%;
     width: 86.2258953168%;
@@ -46,11 +47,12 @@
 }
 
 .device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"]::after {
-    content: '';
-    background-image: url('../assets/img/portrait_black.png');
+    content: "";
+    background-image: url("../assets/img/portrait_black.png");
 }
 
-.device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"] .button {
+.device[data-device="iPhoneX"][data-orientation="portrait"][data-color="black"]
+    .button {
     display: none;
     top: 0%;
     left: 0%;

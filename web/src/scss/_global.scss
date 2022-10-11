@@ -1,10 +1,10 @@
-// 
+//
 // Global
 //
 
 // Scroll padding for all scroll targets on page used with
 // native CSS smooth scrolling
-// 
+//
 // https://caniuse.com/?search=scroll-padding
 
 html {
@@ -15,6 +15,10 @@ html {
 
 .bg-black {
     background-color: $black !important;
+}
+
+.bg-light {
+    background-color: $blue !important;
 }
 
 .bg-gradient-primary-to-secondary {
