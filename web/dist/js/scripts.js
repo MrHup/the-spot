@@ -1,5 +1,5 @@
 /*!
-* Start Bootstrap - The SPOT v6.0.6 (https://startbootstrap.com/theme/new-age)
+* Start Bootstrap - The SPOT v1.0.0 (https://startbootstrap.com/theme/new-age)
 * Copyright 2013-2022 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/the-spot-web/blob/master/LICENSE)
 */
