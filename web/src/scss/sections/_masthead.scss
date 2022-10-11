@@ -1,7 +1,19 @@
-// 
+//
 // Masthead
-// 
-
+//
+.masthead-dark {
+    background-color: #1c1b20 !important;
+    // Set top padding to 5rem plus the height of the fixed navbar
+    padding-top: 5rem + 4.5rem;
+    padding-bottom: 5rem;
+}
+.masthead-border {
+    border: 1px solid white;
+    padding-left: 6rem;
+    padding-right: 6rem;
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+}
 .masthead {
     background-color: $gray-100;
     // Set top padding to 5rem plus the height of the fixed navbar
@@ -125,5 +137,4 @@
             }
         }
     }
-
 }
