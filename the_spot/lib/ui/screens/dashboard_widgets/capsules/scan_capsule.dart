@@ -61,7 +61,8 @@ class _ScanCapsuleState extends State<ScanCapsule> {
             int id = getCorrectId(result!.code!);
             if (id != -1) {
               GlobalVals.controller!.pauseCamera();
-              print("id $id");
+              print(
+                  "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<id $id");
               attemptBuySpot(
                   context, GlobalVals.currentUser.privateKey, BigInt.from(id));
             }

@@ -248,6 +248,55 @@ Future<List<TransactionW3>> getTransactionsForUser(String privateKey) async {
   }
 }
 
+Future<List<TransactionW3>> getTransactionsForUserWithBlock(
+    BuildContext context, String privateKey) async {
+  try {
+    blockUser(context);
+    print("<<<flavius_Debug>>> Getting transactions for user: $privateKey");
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final getTransactionsForUser =
+        contract.function('get_transactions_for_user');
+
+    final dev = await client.call(
+        contract: contract,
+        function: getTransactionsForUser,
+        params: [privateKey]);
+
+    print("<<<flavius_debug>>> dev is $dev");
+    List<TransactionW3> transactions = [];
+    for (var transaction in dev[0]) {
+      var dt = DateTime.fromMillisecondsSinceEpoch(transaction[0].toInt());
+      var d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
+
+      final String sender = transaction[1];
+      final String receiver = transaction[2];
+      final int amount = transaction[3].toInt();
+      final String date = d24;
+      final int typeNr = transaction[4].toInt();
+      final String type = GlobalVals.operationTypesEnum[typeNr] ?? "Unknown";
+
+      transactions.add(TransactionW3(
+        date: date,
+        sender: sender,
+        receiver: receiver,
+        amount: amount,
+        type: type,
+      ));
+    }
+    Navigator.of(context, rootNavigator: true).pop();
+    return transactions;
+  } catch (e) {
+    print("<<<flavius_debug>>> Error on getTransactionsForUser");
+    print(e);
+    Navigator.of(context, rootNavigator: true).pop();
+    return [];
+  }
+}
+
 Future<CurrentUser> getUserByPrivateKey(String privateKey) async {
   final client = Web3Client(rpcUrl, Client());
   final abiCode = await rootBundle.loadString('assets/abi.json');
@@ -489,6 +538,47 @@ void attemptBuySpot(
   await buySpot(privateKey, spotId);
   // Navigator.of(context, rootNavigator: true).pop();
   // Navigator.pop(context);
+  Navigator.of(context, rootNavigator: true)
+      .pushNamedAndRemoveUntil("/dashboard", (route) => false);
+}
+
+Future<bool> updateSpotImage(
+    BigInt spotId, String imageUri, String privateKey) async {
+  try {
+    final client = Web3Client(rpcUrl, Client());
+    final abiCode = await rootBundle.loadString('assets/abi.json');
+    final credentials = await client.credentialsFromPrivateKey(_privateKey);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abiCode, 'SpotCoin'), contractAddr);
+
+    final updateSpotFunction = contract.function('update_spot_image');
+
+    print("Update image spot with id: $spotId");
+
+    await client.sendTransaction(
+        credentials,
+        Transaction.callContract(
+          contract: contract,
+          function: updateSpotFunction,
+          parameters: [spotId, imageUri, privateKey],
+        ),
+        chainId: 53);
+
+    await client.dispose();
+    showSimpleToast("Update spot with success");
+    return true;
+  } catch (e) {
+    showSimpleToast("Error on updating spot");
+    print("<<<flavius_debug>>> Error on update spot");
+    print(e);
+    return false;
+  }
+}
+
+void attemptUpdateSpotImage(BuildContext context, BigInt spotId,
+    String imageUri, String privateKey) async {
+  blockUser(context);
+  await updateSpotImage(spotId, imageUri, privateKey);
   Navigator.of(context, rootNavigator: true)
       .pushNamedAndRemoveUntil("/dashboard", (route) => false);
 }

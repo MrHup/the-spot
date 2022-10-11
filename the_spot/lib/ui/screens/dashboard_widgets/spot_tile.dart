@@ -3,6 +3,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/config/custom_extensions.dart';
 import 'package:the_spot/data/models/spot.dart';
+import 'package:the_spot/ui/screens/dashboard_widgets/capsules/edit_spot_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/focus_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/scan_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/icon_button.dart';
@@ -35,6 +36,13 @@ class SpotTile extends StatelessWidget {
                   ? IconButtonW(
                       onPressed: () {
                         print("Edit");
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: EditSpotCapsule(spot),
+                          withNavBar: true,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
                       },
                       icon: const Icon(
                         Icons.edit,
