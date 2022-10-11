@@ -31,10 +31,11 @@ class _HomeCapsuleState extends State<HomeCapsule> {
   }
 
   void refresh() async {
-    _transactionsFuture = getTransactionsForUserWithBlock(
-        context, GlobalVals.currentUser.privateKey);
-    await _transactionsFuture;
-    setState(() {});
+    // _transactionsFuture = getTransactionsForUserWithBlock(
+    //     context, GlobalVals.currentUser.privateKey);
+    // await _transactionsFuture;
+    // setState(() {});
+    attemptLoginProcessed(context, GlobalVals.currentUser.privateKey);
   }
 
   Future<List<TransactionW3>>? _transactionsFuture;
@@ -44,13 +45,13 @@ class _HomeCapsuleState extends State<HomeCapsule> {
     _currentBalance = GlobalVals.currentUser.balance.toInt();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           showSimpleToast("Refreshing data");
           refresh();
         },
         child: const Icon(Icons.replay_outlined),
         backgroundColor: AppThemes.accentColor,
-      ),
+      ).withPadding(8),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(children: [
         const DashboardDrip(),

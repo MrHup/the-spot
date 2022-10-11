@@ -15,7 +15,7 @@ import 'package:http/http.dart';
 
 const String rpcUrl = 'https://testnet-rpc.coinex.net';
 final EthereumAddress contractAddr =
-    EthereumAddress.fromHex('0xd03B6Aaa9E832E99E6245110040Ba707dD1AE816');
+    EthereumAddress.fromHex('0xf03c6E25636d12174D3ec6EDA0a1b358F5a366D2');
 const String _privateKey =
     "0x0503d85eaf557849e40c4a7e6895aa2f6764c26af04fd02a36f5d0f3fa3954fc";
 
@@ -123,6 +123,24 @@ void attemptLogin(BuildContext context, String rawPrivateKey) async {
     var persistentStorage = await Hive.openBox('userData');
     persistentStorage.put("privateKey", GlobalVals.currentUser.privateKey);
     Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+  }
+}
+
+void attemptLoginProcessed(BuildContext context, String privateKey) async {
+  blockUser(context);
+
+  CurrentUser? user = await loginUser(privateKey);
+
+  if (user != null && user.privateKey != "") {
+    print("<<<flavius_debug>>> User logged in with privatekey: $privateKey");
+    GlobalVals.currentUser = user;
+    print(
+        "<<<flavius_debug>>> global pv is now: ${GlobalVals.currentUser.privateKey}");
+    // save hash to persistent storage
+    var persistentStorage = await Hive.openBox('userData');
+    persistentStorage.put("privateKey", GlobalVals.currentUser.privateKey);
+    Navigator.of(context, rootNavigator: true)
+        .pushNamedAndRemoveUntil("/dashboard", (route) => false);
   }
 }
 
@@ -468,7 +486,7 @@ Future<List<Spot>> getAllSpotsOwnedByUser(String privateKey) async {
     final dev = await client.call(
         contract: contract, function: getSpotsForUser, params: [privateKey]);
 
-    print("<<<flavius_debug>>> dev is $dev");
+    print("<<<flavius_debug>>> dev owned is $dev");
     List<Spot> spots = [];
     for (var spot in dev[0]) {
       print(spot);

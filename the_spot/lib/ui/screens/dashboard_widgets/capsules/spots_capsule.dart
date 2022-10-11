@@ -6,6 +6,7 @@ import 'package:the_spot/config/theme_data.dart';
 import 'package:the_spot/data/models/spot.dart';
 import 'package:the_spot/data/models/static_user.dart';
 import 'package:the_spot/data/repository/auth_web3.dart';
+import 'package:the_spot/data/repository/popups.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/border_button.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/capsules/buy_spot_capsule.dart';
 import 'package:the_spot/ui/screens/dashboard_widgets/spot_tile.dart';
@@ -28,23 +29,45 @@ class _MySpotsCapsuleState extends State<MySpotsCapsule> {
         getAllSpotsOwnedByUser(GlobalVals.currentUser.privateKey);
   }
 
+  void refresh() async {
+    _spotsFuture = getAllSpotsCreatedByUser(GlobalVals.currentUser.privateKey);
+    _spotsOwnedFuture =
+        getAllSpotsOwnedByUser(GlobalVals.currentUser.privateKey);
+    await _spotsOwnedFuture;
+    await _spotsFuture;
+    setState(() {});
+  }
+
   Future<List<Spot>>? _spotsFuture;
   Future<List<Spot>>? _spotsOwnedFuture;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          PersistentNavBarNavigator.pushNewScreen(
-            context,
-            screen: BuySpotCapsule(returnNeeded: true),
-            withNavBar: true,
-            pageTransitionAnimation: PageTransitionAnimation.cupertino,
-          );
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: AppThemes.accentColor,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              showSimpleToast("Refreshing data");
+              refresh();
+            },
+            child: const Icon(Icons.replay_outlined),
+            backgroundColor: AppThemes.accentColor,
+          ).withPadding(8),
+          FloatingActionButton(
+            onPressed: () {
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: BuySpotCapsule(returnNeeded: true),
+                withNavBar: true,
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: AppThemes.accentColor,
+          ),
+        ],
       ),
       body: Stack(children: [
         const DashboardDrip(),
